@@ -3,6 +3,8 @@
 from codigo import KEYS, Clave, Mensaje
 
 def run():
+    #imprimimos pantalla principal y esperamos valor,
+    #para proceder a una proxima pantalla
     valor = pantalla_principal()
     if valor == 'G':
         print('::: [G]enerando Clave ... ::: ')
@@ -37,6 +39,7 @@ def run():
         run()
 
 def pantalla_principal():
+    #Pantalla principal
     print('''
     ¡Saludos! Las opciones disponibles son:
 
@@ -49,6 +52,7 @@ def pantalla_principal():
     return valor
 
 def generar_clave_exponencial():
+    #Pantalla para generar clave
     clave = Clave()
     print('Su clave es: ')
     print('''
@@ -59,6 +63,7 @@ def generar_clave_exponencial():
     run()
 
 def menu_cifrar_mensaje(p,e):
+    #Imprimimos pantalla para cifrar,y eesperamos valor
     valor = pantalla_cifrar()
     if valor == 'E':
         print('::: [E]scribir Mensaje :::')
@@ -82,6 +87,7 @@ def menu_cifrar_mensaje(p,e):
         menu_cifrar_mensaje(p,e)
 
 def menu_decifrar_mensaje(p,d):
+    #Imprimimos pantalla para cifrar,y esperamos valor
     valor = pantalla_cifrar()
     if valor == 'E':
         print('::: [E]scribir Mensaje :::')
@@ -104,6 +110,7 @@ def menu_decifrar_mensaje(p,d):
         menu_decifrar_mensaje(p,d)
 
 def pantalla_cifrar():
+    #Pantalla para cifrar
     print('''
     Las opciones disponibles son:
 
@@ -116,6 +123,7 @@ def pantalla_cifrar():
     return valor
 
 def cifrar_mensaje(p,e):
+    #Ciframos el mensaje almacenado en base a los parametros p,e
     texto = input('¿Cuál es el mensaje a cifrar?\n')
     mensaje = Mensaje(texto,p)
     mensaje_cifrado = Mensaje(mensaje.cifrar_mensaje(e),p)
@@ -125,6 +133,7 @@ def cifrar_mensaje(p,e):
     exportar_mensaje(mensaje_cifrado.texto, True)
 
 def decifrar_mensaje(p,d):
+    #Deciframos el mensaje almacenado en base a los parametros p,d
     texto = input('¿Cuál es el mensaje a decifrar?\n')
     mensaje_cifrado = Mensaje(texto,p)
     mensaje = Mensaje(mensaje_cifrado.decifrar_texto(d),p)             #Creamos la clase
@@ -134,6 +143,7 @@ def decifrar_mensaje(p,d):
     exportar_mensaje(mensaje.texto,False)
 
 def exportar_mensaje(texto, cifrado = True):
+    #Pantalla para exportar mensaje
     print('''
     ¿Desea exportar el mensaje (.txt)?
     [S]i
@@ -159,6 +169,7 @@ def exportar_mensaje(texto, cifrado = True):
         exportar_mensaje(texto, cifrado)
 
 def importar_mensaje(p, key, cifrado = True):
+    #Pantalla para importar mensaje
     if cifrado:
         with open('mensaje_cifrado.txt') as f:
             lista_mensaje = f.readlines()
