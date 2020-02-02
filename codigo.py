@@ -42,14 +42,14 @@ iniciales, los cuales le daran la complejidad a la clave
 '''
 class Clave:
     def __init__(self):
-        #Parametros iniciales que determinan la complejidad de la clave
+        #Valores iniciales que determinan la complejidad de la clave
         self.p = self._primo_long_impar(40)
         self.e = self._primo_relativo(30)
         self.d = self._modulo_inverso(self.e)
 
     def _algoritmo_de_Euclides(self, a, b):
         #input: a=Número entero , b=Número entero
-        #retrun: a=mcd entre a y b (input)  
+        #output: mcd entre a y b  , 1 = a*u0 + b*v0
         if b == 0:
             return 0,1,0
         u0 = 1
@@ -72,7 +72,7 @@ class Clave:
         return  a, u0, v0
 
     def _modulo_inverso(self, num):
-        #Hallamos el inverso con respecto a self.p-1 del parametro
+        #Hallamos el inverso mod(self.p-1) del parametro
         mod = self.p - 1
         mcd,u,v = self._algoritmo_de_Euclides(mod,num)
         if mcd != 1:
