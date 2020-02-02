@@ -112,6 +112,10 @@ class Clave:
             if es_primo:
                 return p
 
+'''
+Esta clase e encarga de almacenar el texto y las funciones necesarias 
+para cifrar o decifrar el texto almacenado, en base a KEYS2
+'''     
 class Mensaje:
     #Valores iniciales, los cuales constan de un texto y de un entero p
     def __init__(self,texto,p):
