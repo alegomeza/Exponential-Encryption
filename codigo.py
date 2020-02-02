@@ -3,6 +3,8 @@
 import random
 import math
 
+#Se le asigna un valor entero a los caracteres que deseamos codificar
+
 KEYS = {'#': '35', 'Q': '61', '0': '66', ' ': '88', 'W': '81', 'k': '46',
         '=': '75', 'E': '80', '+': '74', 'd': '20', '1': '43', 'z': '71',
         'F': '94', ';': '10', 'I': '47', 'U': '16', 'M': '09', 'e': '26',
@@ -34,13 +36,20 @@ KEYS2 = {'a': '00', 'b': '01', 'c': '02', 'd': '03', 'e': '04', 'f': '05',
          '8': '60', '9': '61', '.': '62', ',': '63', '?': '64', '!': '65',
          ' ': '66', '\n': '67' }
 
+'''
+Clase encargada de generar una clave de acuerdo a los parametros 
+iniciales, los cuales le daran la complejidad a la clave
+'''
 class Clave:
     def __init__(self):
+        #Parametros iniciales que determinan la complejidad de la clave
         self.p = self._primo_long_impar(40)
         self.e = self._primo_relativo(30)
         self.d = self._modulo_inverso(self.e)
 
     def _algoritmo_de_Euclides(self, a, b):
+        #input: a=Número entero , b=Número entero
+        #retrun: a=mcd entre a y b (input)  
         if b == 0:
             return 0,1,0
         u0 = 1
@@ -63,6 +72,7 @@ class Clave:
         return  a, u0, v0
 
     def _modulo_inverso(self, num):
+        #Hallamos el inverso con respecto a self.p-1 del parametro
         mod = self.p - 1
         mcd,u,v = self._algoritmo_de_Euclides(mod,num)
         if mcd != 1:
@@ -71,6 +81,7 @@ class Clave:
         return v % mod
 
     def _primo_relativo(self, bits):
+        #Hallamos un primo relativo con respecto a self.p -1, de acuerdo al parametro
         busqueda = True
         while busqueda:
             e = random.getrandbits(bits)
@@ -81,12 +92,15 @@ class Clave:
                 return e
 
     def _primo_long_impar(self,bits):
+        #Generamos un número primo de acuerdo al parametro, 
+        #con una cantidad impar de digitos
         p = 'UD'
         while len(str(p)) % 2 == 0:
             p = self._generar_primo(bits)
         return p
 
     def _generar_primo(self,bits):
+        #Generamos un número primo de acuerdo al parametro
         busqueda = True
         while busqueda:
             es_primo = True
@@ -99,11 +113,14 @@ class Clave:
                 return p
 
 class Mensaje:
+    #Valores iniciales, los cuales constan de un texto y de un entero p
     def __init__(self,texto,p):
         self.texto = texto
         self.p = p
 
     def cifrar_mensaje(self,e):
+        #Recibe el parametro e, con esto se prodece a pasar la cadena de caracteres a una cadena de enteros
+        #y son codificados por el parametro e
         lista_enteros = self._str_a_int()
         enteros = [int(num) for num in lista_enteros if True]
         enteros_cifrados = [self._calcular_Pe_mod_p(num, e, self.p) for num in enteros if True]
@@ -116,6 +133,7 @@ class Mensaje:
         return texto_cifrado
 
     def _calcular_Pe_mod_p(self, P, e, p):
+        #calculo de torres de potencia en base a los parametros
         bin_e = list(bin(e))
         bin_e = bin_e[2:]
         bin_e = [int(num) for num in bin_e if True]
@@ -135,6 +153,7 @@ class Mensaje:
         return resultado
 
     def decifrar_texto(self, d):
+        #Se encarga de descifrar self.texto a partir del parametro d
         longitud = len(str(self.p))
         lista_enteros_cifrados = []
         grupo = ''
@@ -162,6 +181,7 @@ class Mensaje:
         return texto_final
 
     def _str_a_int(self):
+        #Cambia self.texto a cadena de enteros
         longitud = len(str(self.p))  # 21
         max = (longitud - 1)//2      # 10
         lista_chr = list(self.texto)
@@ -181,6 +201,7 @@ class Mensaje:
         return lista_enteros
 
     def _int_a_str(self, texto_decifrado):
+        #Apartir de una cadena de enteros, retorna una cadena de caracteres
         longitud = len(texto_decifrado)//2
         texto_final = ''
         letras_num = [texto_decifrado[i*2 : (i + 1)*2] for i in range(longitud) if True]
