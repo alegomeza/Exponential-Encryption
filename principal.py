@@ -181,7 +181,7 @@ def importar_mensaje(p, key, cifrado = True):
     except FileNotFoundError:
         print('\nArchivo no encontrado\n')
         if cifrado:
-            menu_cifrar_mensaje(p,key,)
+            menu_cifrar_mensaje(p,key)
         else:
             menu_decifrar_mensaje(p,key)
                 
