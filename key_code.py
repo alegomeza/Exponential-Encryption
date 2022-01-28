@@ -24,7 +24,9 @@ def generate_prime(bits: int) -> int:
             return p
 
 def euclidean_algorithm(a: int, b: int) -> tuple:
-    # output: gcd , n , m where gcd = a*n + b*m
+    # output: gcd , n , m 
+    # where gcd = a*n + b*m
+    # gcd = Greatest Common Divisor
     if b == 0:
         return 0,1,0
     u0 , u1 = 1 , 0
@@ -41,7 +43,21 @@ def euclidean_algorithm(a: int, b: int) -> tuple:
         v0 , v1 = v1 , v
     return a , u0 , v0
 
+def coprime(n: int, bits: int) -> int:
+    # This function return a random coprime number of n 
+    search = True
+    while search:
+        m = random.getrandbits(bits)
+        gcd = math.gcd(n,m)
+        if gcd == 1:
+            search = False
+            return m
 
+def inverse_module(mod: int, n: int) -> int:
+    gcd, _ , m = euclidean_algorithm(mod, n) 
+    if gcd != 1:
+        return 0
+    return m % mod
 
 
 
