@@ -53,18 +53,20 @@ def coprime(n: int, bits: int) -> int:
             search = False
             return m
 
-def inverse_module(mod: int, n: int) -> int:
-    gcd, _ , m = euclidean_algorithm(mod, n) 
+def inverse_module(n: int, mod: int) -> int:
+    gcd, m , _ = euclidean_algorithm(n, mod) 
     if gcd != 1:
         return 0
     return m % mod
 
-
-
-
-
-
 class Key_code:
 
     def __init__(self) -> None:
-        pass
+        self.p = int
+        self.e = int
+        self.d = int
+
+    def generate_key(self) -> None:
+        self.p = generate_prime(40)
+        self.e = coprime(self.p - 1, 30)
+        self.d = inverse_module(self.e, self.p - 1)
