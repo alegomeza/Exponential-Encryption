@@ -34,6 +34,8 @@ class Encryption:
         pass
 
     def __str_to_int(self):
+        # Takes a string of characters and 
+        # transforms them into a list of integers
         lenght = len(str(self.key_code.p))
         max = (lenght - 1)//2
         character_list = self.message.text
@@ -53,4 +55,16 @@ class Encryption:
         return integer_list
 
     def __int_to_str(self):
-        pass            
+        # Takes a list of integers and 
+        # transforms them into a string
+        lenght = len(self.message.text)//2
+        text = ''
+        letters_num = [self.message.text[index*2 : (i+1)*2]
+                        for index in range(lenght)]
+        for num in letters_num:
+            for keys, values in KEYS.items():
+                if values == num:
+                    text += keys
+        return text
+
+
