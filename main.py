@@ -34,9 +34,6 @@ def encrypt_or_decrypt(message, key_code):
         print('... encrypting')
         return encrypt()
 
-
-
-
 @clear_screen
 def message_screen():
     message = Message(text='')
