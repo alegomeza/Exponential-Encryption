@@ -54,7 +54,7 @@ class Encryption:
         return integer_list
         
 
-    def a__int_to_str(self) -> str:
+    def __int_to_str(self) -> str:
         # Takes a list of integers and 
         # transforms them into a string
         lenght = len(self.message.text)//2
@@ -102,7 +102,7 @@ class Encryption:
             ciphertext += encrypted_integers_list[index]
         return ciphertext
 
-    def a__decipher_message(self):
+    def __decipher_message(self):
         length = len(str(self.key_code.p))
         encrypted_integers_list = []
         group = ''
