@@ -10,6 +10,34 @@ def clear_screen(func):
     return wrapper
 
 @clear_screen
+def encrypt_or_decrypt(message, key_code):
+    print('You have a message and key')
+    print(key_code.p)
+    input('Test # 1')
+    encryption = Encryption(message=message, key_code=key_code)
+    def encrypt():
+        encryption.encrypt_message()
+        print('This is the message:')
+        print(message.text)
+        input()
+    def decrypt():
+        encryption.decipher_message()
+        print('This is the message:')
+        print(message.text)
+        input()
+    if message.encryption:
+        print('The message is encrypted')
+        print('... decrypting')
+        return decrypt()
+    else:
+        print('The message is decrypted')
+        print('... encrypting')
+        return encrypt()
+
+
+
+
+@clear_screen
 def message_screen():
     message = Message(text='')
     print('::: [M]essage :::')
@@ -47,11 +75,10 @@ def key_screen():
             return key_screen()
         ans = str(input('Are the values correct?[Y] ')).upper()
         if ans == 'Y':
-            import key_code
+            return key_code
         else:
             return key_screen()
         
-        return key_code
     elif  answer == 'N':
         print('... generating key ...')
         key_code.generate_key()
@@ -84,13 +111,15 @@ def run():
         key_code = key_screen()
         input('Now you need a message.')
         message = message_screen()
-        input('[Press enter]')
+        encrypt_or_decrypt(message, key_code)
+        run()
     
     elif answer == 'M':
         message = message_screen()
         input('Now you need a key_code.')
         key_code = key_screen()
-        input('[Press enter]')
+        encrypt_or_decrypt(message, key_code)
+        run()
 
     elif answer == 'E':
         exit()

@@ -128,8 +128,8 @@ class Encryption:
 
     def decipher_message(self):
         if self.message.encryption:
-            self.message.text = self.a__decipher_message()
-            self.message.text = self.a__int_to_str()
+            self.message.text = self.__decipher_message()
+            self.message.text = self.__int_to_str()
             self.message.encryption = False
         else:
             print('The message is already decrypted')
