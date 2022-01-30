@@ -63,7 +63,7 @@ class Encryption:
         # transforms them into a string
         lenght = len(self.message.text)//2
         text = ''
-        letters_num = [self.message.text[index*2 : (i+1)*2]
+        letters_num = [self.message.text[index*2 : (index+1)*2]
                         for index in range(lenght)]
         for num in letters_num:
             for keys, values in KEYS.items():
