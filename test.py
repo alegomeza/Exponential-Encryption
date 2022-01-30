@@ -16,12 +16,12 @@ def run():
 
     print('Vamos a aplicar la función')
 
-    # text = encriptacion.__encrypt_message()
-    # print(text)
-
     encriptacion.encrypt_message()
 
     print(mensaje.text, mensaje.encryption)
+
+    text = encriptacion.a__decipher_message()
+    print(text)
 
 if __name__ == '__main__':
     run()
