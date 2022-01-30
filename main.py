@@ -1,6 +1,3 @@
-from cgitb import text
-from email import message
-from youtube_dl import main
 from message import Message
 from key_code import Key_code
 from encryption import Encryption
