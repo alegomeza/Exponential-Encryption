@@ -1,3 +1,7 @@
+from importlib.resources import read_text
+from platform import java_ver
+from re import I
+from typing import final
 from key_code import Key_code
 from message import Message
 
@@ -33,7 +37,7 @@ class Encryption:
     def decipher_message():
         pass
 
-    def __str_to_int(self):
+    def __str_to_int(self) -> str:
         # Takes a string of characters and 
         # transforms them into a list of integers
         lenght = len(str(self.key_code.p))
@@ -54,7 +58,7 @@ class Encryption:
             integer_list += '49'
         return integer_list
 
-    def __int_to_str(self):
+    def __int_to_str(self) -> str:
         # Takes a list of integers and 
         # transforms them into a string
         lenght = len(self.message.text)//2
@@ -66,5 +70,67 @@ class Encryption:
                 if values == num:
                     text += keys
         return text
+
+    def __powers_towers(self, P: int, e: int) -> int:
+        # Function that calculates a tower of powers
+        # to facilitate calculations.
+        bin_e = list(bin(e))
+        bin_e = bin_e[2:]
+        bin_e = [int(num) for num in bin_e]
+        powers = []
+        for index in range(0, len(bin_e)):
+            if index == 0:
+                C = P % self.key_code.p
+                powers.insert(0, C)
+            else:
+                C = powers[0]**2 % self.key_code.p
+                powers.insert(0, C)
+        result = 1
+        for index in range(len(bin_e)):
+            if bin_e[index] == 1:
+                result *= powers[index]
+                result = result % self.key_code.p
+        return result
+
+    def __encrypt_message(self) -> str:
+        # modular power calculation is applied
+        integer_list = self.__str_to_int()
+        integers = [int(num) for num in integer_list]
+        encrypted_integers = [self.__powers_towers(num, self.key_code.e) 
+                                for num in integers]
+        encrypted_integers_list = [str(num) for num in encrypted_integers]
+        ciphertext = ''
+        for index in range(len(encrypted_integers_list)):
+            while len(encrypted_integers_list[index]) < len(str(self.key_code.p)):
+                encrypted_integers_list[index] = '0' + encrypted_integers_list[index]
+            ciphertext += encrypted_integers_list[index]
+        return ciphertext
+
+    def __decipher_message(self):
+        length = len(self.key_code.p)
+        encrypted_integers_list = []
+        group = ''
+        for index in range(1, len(self.message.text)):
+            if len(group) < length:
+                group += self.message.text[index - 1]
+            else:
+                encrypted_integers_list.append(group)
+                group = self.message.text[index - 1]
+        group += self.message.text[-1]
+        encrypted_integers_list.append(group)
+        encrypted_integer = [int(num) for num in encrypted_integers_list]
+        integers = [self.__powers_towers(num, self.key_code.d) for num in encrypted_integer]
+        integers_list = [str(num) for num in integers]
+        decrypted_text = ''
+        for index in range(len(integers_list)):
+            while len(integers_list[index]) < length - 1:
+                integers_list[index] = '0' + integers_list[index]
+            decrypted_text += integers_list[index]
+        return decrypted_text
+
+
+    
+
+
 
 
