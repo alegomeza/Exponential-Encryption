@@ -1,3 +1,4 @@
+from email import message
 from importlib.resources import read_text
 from platform import java_ver
 from re import I
@@ -31,12 +32,6 @@ class Encryption:
         self.message = message
         self.key_code = key_code
 
-    def encrypt_message():
-        pass
-
-    def decipher_message():
-        pass
-
     def __str_to_int(self) -> str:
         # Takes a string of characters and 
         # transforms them into a list of integers
@@ -55,8 +50,9 @@ class Encryption:
                 group += KEYS[character_list[index]]
         integer_list.append(group)
         while len(integer_list[-1]) < 2 * max:
-            integer_list += '49'
+            integer_list[-1] += '49'
         return integer_list
+        
 
     def __int_to_str(self) -> str:
         # Takes a list of integers and 
@@ -127,6 +123,16 @@ class Encryption:
                 integers_list[index] = '0' + integers_list[index]
             decrypted_text += integers_list[index]
         return decrypted_text
+
+    def encrypt_message(self):
+            if not self.message.encryption:
+                self.message.text = self.__encrypt_message()
+                self.message.encryption = True
+            else:
+                print('The message is already encrypted')
+
+    def decipher_message(self):
+        pass
 
 
     

@@ -10,13 +10,18 @@ def run():
 
     mensaje = Message(text='Esto en un mensaje de prueba')
 
+    print(mensaje.text, mensaje.encryption)
+
     encriptacion = Encryption(message=mensaje, key_code=clave)
 
     print('Vamos a aplicar la función')
 
-    text = encriptacion.a__encrypt_message()
-    print(text)
+    # text = encriptacion.__encrypt_message()
+    # print(text)
 
+    encriptacion.encrypt_message()
+
+    print(mensaje.text, mensaje.encryption)
 
 if __name__ == '__main__':
     run()
