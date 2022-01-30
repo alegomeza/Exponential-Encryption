@@ -66,7 +66,7 @@ class Key_code:
         self.e = int
         self.d = int
 
-    def generate_key(self) -> None:
-        self.p = generate_prime(40)
-        self.e = coprime(self.p - 1, 30)
+    def generate_key(self, bytes_p: int = 40, bytes_e: int = 30) -> None:
+        self.p = generate_prime(bytes_p)
+        self.e = coprime(self.p - 1, bytes_e)
         self.d = inverse_module(self.e, self.p - 1)
