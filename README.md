@@ -1,4 +1,6 @@
-# cifrado_exponencial
-Breve aplicación  de como codificar mensajes usando el cifrado exponencial
+# Exponential Encryption
 
-Se ejecuta solamente principal.py; codigo.py almacena las clases necesarias para su ejecución, en dond se pueden definir parametros como complejidad de la clave, ademas de la codificación aplicada a los caracteres.
+Brief application of how to encrypt messages using exponential encryption.
+More information [here](https://sites.millersville.edu/bikenaga/number-theory/exponentiation-ciphers-and-rsa-ciphers/exponentiation-ciphers-and-rsa-ciphers.html "here").
+
+Only main.py is executed.
