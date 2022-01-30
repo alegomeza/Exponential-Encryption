@@ -1,3 +1,4 @@
+from email import message
 from encryption import Encryption
 from message import Message
 from key_code import Key_code
@@ -21,7 +22,12 @@ def run():
     print(mensaje.text, mensaje.encryption)
 
     text = encriptacion.a__decipher_message()
+    
     print(text)
+
+    encriptacion.decipher_message()
+
+    print(mensaje.text, mensaje.encryption)
 
 if __name__ == '__main__':
     run()

@@ -19,7 +19,7 @@ KEYS = {'#': '35', 'Q': '61', '0': '66', ' ': '88', 'W': '81', 'k': '46',
             ':': '77', 'H': '19', '[': '33', 'l': '24', 'í': '59', '}': '41',
             'A': '64', '-': '72', 'O': '42', 'w': '36', '9': '40', 'g': '08',
             'b': '57', 'é': '23', '¡': '51', '?': '25', 'c': '38', '5': '12',
-            'á': '27', '&': '15', '\n': '55', '8': '00', 'K': '21', '{': '69',
+            'á': '27', '&': '15', 'ẍ': '55', '8': '00', 'K': '21', '{': '69',
             '~': '48', 'C': '87', 'm': '22', 'h': '05', 'u': '11', 't': '31',
             '"': '90', '$': '50', '>': '97', '<': '96', '!': '86', '.': '95',
             '6': '17', ',': '98'}
@@ -40,7 +40,7 @@ class Encryption:
         character_list = self.message.text
         integer_list = []
         count = 0
-        group = '49'
+        group = '55'
         for index in range(len(character_list)):
             count += 1
             if count % max == 0:
@@ -50,7 +50,7 @@ class Encryption:
                 group += KEYS[character_list[index]]
         integer_list.append(group)
         while len(integer_list[-1]) < 2 * max:
-            integer_list[-1] += '49'
+            integer_list[-1] += '55'
         return integer_list
         
 
@@ -132,7 +132,12 @@ class Encryption:
                 print('The message is already encrypted')
 
     def decipher_message(self):
-        pass
+        if self.message.encryption:
+            self.message.text = self.a__decipher_message()
+            self.message.text = self.a__int_to_str()
+            self.message.encryption = False
+        else:
+            print('The message is already decrypted')
 
 
     
