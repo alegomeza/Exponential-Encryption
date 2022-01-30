@@ -12,8 +12,6 @@ def clear_screen(func):
 @clear_screen
 def encrypt_or_decrypt(message, key_code):
     print('You have a message and key')
-    print(key_code.p)
-    input('Test # 1')
     encryption = Encryption(message=message, key_code=key_code)
     def encrypt():
         encryption.encrypt_message()
