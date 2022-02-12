@@ -1,28 +1,34 @@
 from message import Message
-from key_code import Key_code
+from keycode import KeyCode
 from encryption import Encryption
 import os
 
+
 def clear_screen(func):
-    def wrapper(*args,**kwargs):
+    def wrapper(*args, **kwargs):
         os.system('clear')
         return func(*args, **kwargs)
+
     return wrapper
+
 
 @clear_screen
 def encrypt_or_decrypt(message, key_code):
     print('You have a message and key')
     encryption = Encryption(message=message, key_code=key_code)
+
     def encrypt():
         encryption.encrypt_message()
         print('This is the message:')
         print(message.text)
         input()
+
     def decrypt():
         encryption.decipher_message()
         print('This is the message:')
         print(message.text)
         input()
+
     if message.encryption:
         print('The message is encrypted')
         print('... decrypting')
@@ -31,6 +37,7 @@ def encrypt_or_decrypt(message, key_code):
         print('The message is decrypted')
         print('... encrypting')
         return encrypt()
+
 
 @clear_screen
 def message_screen():
@@ -54,10 +61,11 @@ def message_screen():
         input('Option not found, try again.')
         return message_screen()
 
+
 @clear_screen
 def key_screen():
     print('::: [K]ey_code :::')
-    key_code = Key_code()
+    key_code = KeyCode()
     answer = str(input('Do you already have a key? [y/n] ')).upper()
     if answer == 'Y':
         print('Enter the values of p,e and d.')
@@ -73,8 +81,8 @@ def key_screen():
             return key_code
         else:
             return key_screen()
-        
-    elif  answer == 'N':
+
+    elif answer == 'N':
         print('... generating key ...')
         key_code.generate_key()
         print(f'The values  of p, e and d are')
@@ -86,6 +94,7 @@ def key_screen():
     else:
         input('Option not found, try again.')
         return key_screen()
+
 
 @clear_screen
 def main_screen() -> str:
@@ -99,6 +108,7 @@ def main_screen() -> str:
     answer = str(input('Which option do you choose? ')).upper()
     return answer
 
+
 @clear_screen
 def run():
     answer = main_screen()
@@ -108,7 +118,7 @@ def run():
         message = message_screen()
         encrypt_or_decrypt(message, key_code)
         run()
-    
+
     elif answer == 'M':
         message = message_screen()
         input('Now you need a key_code.')
@@ -122,6 +132,7 @@ def run():
     else:
         input('Option not found, try again.')
         run()
+
 
 if __name__ == '__main__':
     run()

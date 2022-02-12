@@ -1,4 +1,4 @@
-from key_code import Key_code
+from keycode import KeyCode
 from message import Message
 
 KEYS = {'#': '35', 'Q': '61', '0': '66', ' ': '88', 'W': '81', 'k': '46',
@@ -21,7 +21,7 @@ KEYS = {'#': '35', 'Q': '61', '0': '66', ' ': '88', 'W': '81', 'k': '46',
 
 class Encryption:
     message = Message('')
-    key_code = Key_code()
+    key_code = KeyCode()
     
     def __init__(self, message, key_code) -> None:
         self.message = message
