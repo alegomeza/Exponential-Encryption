@@ -67,12 +67,12 @@ def inverse_module(n: int, mod: int) -> int:
 
 class KeyCode:
 
-    def __init__(self) -> None:
-        self.p = int
-        self.e = int
-        self.d = int
+    def __init__(self, coprime_1=None, coprime_2=None, inv_mod=None) -> None:
+        self.coprime_1 = coprime_1
+        self.coprime_2 = coprime_2
+        self.inv_mod = inv_mod
 
-    def generate_key(self, bytes_p: int = 40, bytes_e: int = 30) -> None:
-        self.p = generate_prime(bytes_p)
-        self.e = coprime(self.p - 1, bytes_e)
-        self.d = inverse_module(self.e, self.p - 1)
+    def generate_key(self, bytes_coprime_1: int = 40, bytes_coprime_2: int = 30) -> None:
+        self.coprime_1 = generate_prime(bytes_coprime_1)
+        self.coprime_2 = coprime(self.coprime_1 - 1, bytes_coprime_2)
+        self.inv_mod = inverse_module(self.coprime_2, self.coprime_1 - 1)

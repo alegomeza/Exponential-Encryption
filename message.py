@@ -1,7 +1,14 @@
 class Message:
     text = str
-    encryption = bool
 
-    def __init__(self, text: str, encryption: bool = False):
-        self.text = text
-        self.encryption = encryption
+    def __init__(self, text : str = None):
+        if text is None:
+            self.text = ''
+        else:
+            self.text = str(text)
+        
+    def __str__(self):
+        return self.text
+    
+    def __len__(self):
+        return len(self.text)

@@ -21,17 +21,15 @@ KEYS = {'#': '35', 'Q': '61', '0': '66', ' ': '88', 'W': '81', 'k': '46',
 
 
 class Encryption:
-    message = Message('')
-    key_code = KeyCode()
-
-    def __init__(self, message, key_code) -> None:
+    
+    def __init__(self, message : Message, key_code : KeyCode) -> None:
         self.message = message
         self.key_code = key_code
 
     def __str_to_int(self) -> str:
         # Takes a string of characters and 
         # transforms them into a list of integers
-        lenght = len(str(self.key_code.p))
+        lenght = len(str(self.key_code.coprime_1))
         max_lenght = (lenght - 1) // 2
         character_list = self.message.text
         integer_list = []
@@ -71,34 +69,34 @@ class Encryption:
         powers = []
         for index in range(0, len(bin_e)):
             if index == 0:
-                c = p % self.key_code.p
+                c = p % self.key_code.coprime_1
                 powers.insert(0, c)
             else:
-                c = powers[0] ** 2 % self.key_code.p
+                c = powers[0] ** 2 % self.key_code.coprime_1
                 powers.insert(0, c)
         result = 1
         for index in range(len(bin_e)):
             if bin_e[index] == 1:
                 result *= powers[index]
-                result = result % self.key_code.p
+                result = result % self.key_code.coprime_1
         return result
 
     def __encrypt_message(self) -> str:
         # modular power calculation is applied
         integer_list = self.__str_to_int()
         integers = [int(num) for num in integer_list]
-        encrypted_integers = [self.__powers_towers(num, self.key_code.e)
+        encrypted_integers = [self.__powers_towers(num, self.key_code.coprime_2)
                               for num in integers]
         encrypted_integers_list = [str(num) for num in encrypted_integers]
         ciphertext = ''
         for index in range(len(encrypted_integers_list)):
-            while len(encrypted_integers_list[index]) < len(str(self.key_code.p)):
+            while len(encrypted_integers_list[index]) < len(str(self.key_code.coprime_1)):
                 encrypted_integers_list[index] = '0' + encrypted_integers_list[index]
             ciphertext += encrypted_integers_list[index]
         return ciphertext
 
     def __decipher_message(self):
-        length = len(str(self.key_code.p))
+        length = len(str(self.key_code.coprime_1))
         encrypted_integers_list = []
         group = ''
         for index in range(1, len(self.message.text)):
@@ -110,7 +108,8 @@ class Encryption:
         group += self.message.text[-1]
         encrypted_integers_list.append(group)
         encrypted_integer = [int(num) for num in encrypted_integers_list]
-        integers = [self.__powers_towers(num, self.key_code.d) for num in encrypted_integer]
+        integers = [self.__powers_towers(num, self.key_code.inv_mod)\
+                    for num in encrypted_integer]
         integers_list = [str(num) for num in integers]
         decrypted_text = ''
         for index in range(len(integers_list)):
@@ -120,16 +119,16 @@ class Encryption:
         return decrypted_text
 
     def encrypt_message(self):
-        if not self.message.encryption:
-            self.message.text = self.__encrypt_message()
-            self.message.encryption = True
+        if (self.key_code.coprime_1 is None) | (self.key_code.coprime_2 is None) |\
+            (self.key_code.inv_mod is None):
+            print('Missing data in KeyCode')
         else:
-            print('The message is already encrypted')
+            self.message.text = self.__encrypt_message()
 
     def decipher_message(self):
-        if self.message.encryption:
+        if (self.key_code.coprime_1 is None) | (self.key_code.coprime_2 is None) |\
+            (self.key_code.inv_mod is None):
+            print('Missing data in KeyCode')
+        else:
             self.message.text = self.__decipher_message()
             self.message.text = self.__int_to_str()
-            self.message.encryption = False
-        else:
-            print('The message is already decrypted')
