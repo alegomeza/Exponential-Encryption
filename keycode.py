@@ -67,12 +67,31 @@ def inverse_module(n: int, mod: int) -> int:
 
 class KeyCode:
 
-    def __init__(self, coprime_1=None, coprime_2=None, inv_mod=None) -> None:
-        self.coprime_1 = coprime_1
-        self.coprime_2 = coprime_2
-        self.inv_mod = inv_mod
+    def __init__(self, k1=None, k2=None, k3=None) -> None:
+        self.k1 = k1
+        self.k2 = k2
+        self.k3 = k3
+        if (self.k1 is None) | (self.k2 is None) | (self.k3 is None):
+            self._first_time = True
+        else:
+            self._first_time = False
+        
+    def __bool__(self) -> bool:
+        if (self.k1 is None) | (self.k2 is None) | (self.k3 is None):
+            return False
+        else:
+            return True
+        
+    def __str__(self) -> str:
+        data = f'k1={str(self.k1)}\nk2={str(self.k2)}\nk3={str(self.k3)}'
+        return data
 
-    def generate_key(self, bytes_coprime_1: int = 40, bytes_coprime_2: int = 30) -> None:
-        self.coprime_1 = generate_prime(bytes_coprime_1)
-        self.coprime_2 = coprime(self.coprime_1 - 1, bytes_coprime_2)
-        self.inv_mod = inverse_module(self.coprime_2, self.coprime_1 - 1)
+    def generate_key(self, bytes_k1: int = 40, bytes_k2: int = 30) -> None:
+        
+        if self._first_time:
+            self.k1 = generate_prime(bytes_k1)
+            self.k2 = coprime(self.k1 - 1, bytes_k2)
+            self.k3 = inverse_module(self.k2, self.k1 - 1)
+            self._first_time = False
+        else:
+            print('The KeyCode can generate keys only once')
