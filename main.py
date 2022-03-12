@@ -1,4 +1,4 @@
-from graphs import *
+from graphs import Node, Graph
 from keycode import KeyCode
 from encryption import Encryption
 # from graphs import Graph, Node
@@ -13,6 +13,10 @@ def clear_screen(func):
 
     return wrapper
 
+
+def exit_(data = None):
+    exit()
+    return ' ' , data
 
 @clear_screen
 def encrypt_or_decrypt(message, key_code):
@@ -63,55 +67,61 @@ def message_screen():
         input('Option not found, try again.')
         return message_screen()
 
-
+input('yy')
 @clear_screen
-def key_screen(data):
-    print('::: [K]ey_code :::')
-    answer = str(input('Do you already have a key? [y/n] ')).upper()
+# %%
+def key_screen(encryp : Encryption):
+    print('''
+    ::: [K]ey_code :::''')
+    answer = str(input('''
+    Do you have a KeyCode? [y/n] ''')).upper()
     if answer == 'Y':
         print('Enter the values of k1, k2 and k3.')
         try:
-            data[0].k1 = int(input('k1:? '))
-            data[0].k2 = int(input('k2:? '))
-            data[0].k3 = int(input('k3:? '))
+            k1 = int(input('k1:? '))
+            k2 = int(input('k2:? '))
+            k3 = int(input('k3:? '))
+            encryp.key_code = KeyCode(k1, k2, k3)
+            input(f'{encryp.key_code}')
+            input('KeyCode is load')
         except ValueError:
-            input('The values entered are wrong.')
-            return key_screen()
-        ans = str(input('Are the values correct?[Y] ')).upper()
-        if ans == 'Y':
-            return key_code
-        else:
-            return key_screen()
+            input('Value entered is wrong')
+            return 'ks' , encryp
+        return 'fs' , encryp
 
     elif answer == 'N':
         print('... generating key ...')
-        key_code.generate_key()
-        print(f'The values  of p, e and d are')
-        print(f'k1: {key_code.k1}')
-        print(f'k2: {key_code.k2}')
-        print(f'k3: {key_code.k3}')
-        input('Copy the values to a safe place.')
-        return key_code
+        key_code = KeyCode()
+        encryp.key_code = key_code.generate_key()
+        print('''
+    The values  of k1, k2 and k3 are''')
+        print(f'    {encryp.key_code}')
+        input('    Copy the values to a safe place.')
+        return 'fs' , encryp
     else:
         input('Option not found, try again.')
-        return key_screen()
-
+        return 'ks' , encryp
+    
+    input('here2')
+# %%
 
 @clear_screen
 def main_screen(encryp : Encryption) -> str:
+    convert_answer = {'K':'ks', 'M':'ms', 'E':'exit'}
     print('''
     Greetings! The options are:
 
     Key Code    [K]
     Message     [M]
-    Exit        [Any other key]''')
+    Exit        [E]''')
     answer = str(input('''
     Which option do you choose? ''')).upper()
+    answer = convert_answer[answer]
     return answer , encryp
 
 
 @clear_screen
-def run():
+def main():
     
     encryp = Encryption()
     
@@ -125,37 +135,48 @@ def run():
     ms = Node(message_screen)
     
     # node for exit
-    exit = Node(exit)
+    ex = Node(exit_)
     
-    fs.next = {'K': ks, 'M': ms, 'E': exit}
-    ks.next = {'P': fs, 'M': ms}
-    ks.next = {'P': fs, 'K': ks}
-
-    answer = main_screen()
+    # raise ValueError('MEsaje re x')
     
-    if answer == 'K':
-        key_code = key_screen()
-        input('Now you need a message.')
-        message = message_screen()
-        encrypt_or_decrypt(message, key_code)
-        run()
-
-    elif answer == 'M':
-        message = message_screen()
-        input('Now you need a key_code.')
-        key_code = key_screen()
-        encrypt_or_decrypt(message, key_code)
-        run()
-
-    elif answer == 'E':
-        exit()
-
-    else:
-        input('Option not found, try again.')
-        run()
+    fs.next = {'fs': fs, 'ks': ks, 'ms': ms, 'exit': ex}
+    ks.next = {'fs': fs, 'ks': ks, 'ms': ms}
+    ms.next = {'fs': fs, 'ks': ks, 'ms': ms}
+    
+    main_graphs = Graph(fs)
+    
+    while True:
         
-    exit()
+        input(f'{main_graphs.current_node}')
+        main_graphs.run()
+
+# =============================================================================
+#     answer = main_screen()
+#     
+#     if answer == 'K':
+#         key_code = key_screen()
+#         input('Now you need a message.')
+#         message = message_screen()
+#         encrypt_or_decrypt(message, key_code)
+#         run()
+# 
+#     elif answer == 'M':
+#         message = message_screen()
+#         input('Now you need a key_code.')
+#         key_code = key_screen()
+#         encrypt_or_decrypt(message, key_code)
+#         run()
+# 
+#     elif answer == 'E':
+#         exit()
+# 
+#     else:
+#         input('Option not found, try again.')
+#         run()
+#         
+#     exit()
+# =============================================================================
 
 
 if __name__ == '__main__':
-    run()
+    main()
