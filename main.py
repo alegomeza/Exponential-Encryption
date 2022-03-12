@@ -16,7 +16,7 @@ def clear_screen(func):
 
 def exit_(data = None):
     exit()
-    return ' ' , data
+    return 'exit' , data
 
 @clear_screen
 def encrypt_or_decrypt(message, key_code):
@@ -67,22 +67,18 @@ def message_screen():
         input('Option not found, try again.')
         return message_screen()
 
-input('yy')
+
 @clear_screen
-# %%
 def key_screen(encryp : Encryption):
-    print('''
-    ::: [K]ey_code :::''')
-    answer = str(input('''
-    Do you have a KeyCode? [y/n] ''')).upper()
+    print('\t\t::: [K]ey_code :::\n')
+    answer = str(input('\tDo you have a KeyCode? [y/n] ')).upper()
     if answer == 'Y':
-        print('Enter the values of k1, k2 and k3.')
+        print('\tEnter the values of k1, k2 and k3.\n')
         try:
-            k1 = int(input('k1:? '))
-            k2 = int(input('k2:? '))
-            k3 = int(input('k3:? '))
+            k1 = int(input('\tk1:?'))
+            k2 = int(input('\tk2:?'))
+            k3 = int(input('\tk3:?'))
             encryp.key_code = KeyCode(k1, k2, k3)
-            input(f'{encryp.key_code}')
             input('KeyCode is load')
         except ValueError:
             input('Value entered is wrong')
@@ -92,10 +88,11 @@ def key_screen(encryp : Encryption):
     elif answer == 'N':
         print('... generating key ...')
         key_code = KeyCode()
-        encryp.key_code = key_code.generate_key()
+        key_code.generate_key()
+        encryp.key_code = key_code
         print('''
-    The values  of k1, k2 and k3 are''')
-        print(f'    {encryp.key_code}')
+    The values  of k1, k2 and k3 are\n''')
+        print(str(encryp.key_code).replace('k','\tk'))
         input('    Copy the values to a safe place.')
         return 'fs' , encryp
     else:
@@ -103,7 +100,6 @@ def key_screen(encryp : Encryption):
         return 'ks' , encryp
     
     input('here2')
-# %%
 
 @clear_screen
 def main_screen(encryp : Encryption) -> str:
@@ -114,9 +110,12 @@ def main_screen(encryp : Encryption) -> str:
     Key Code    [K]
     Message     [M]
     Exit        [E]''')
-    answer = str(input('''
-    Which option do you choose? ''')).upper()
-    answer = convert_answer[answer]
+    try:
+        answer = str(input('\n\tWhich option do you choose? ')).upper()
+        answer = convert_answer[answer]
+    except KeyError:
+        input('\tOption not found, try again.')
+        return 'fs' , encryp
     return answer , encryp
 
 
@@ -142,12 +141,12 @@ def main():
     fs.next = {'fs': fs, 'ks': ks, 'ms': ms, 'exit': ex}
     ks.next = {'fs': fs, 'ks': ks, 'ms': ms}
     ms.next = {'fs': fs, 'ks': ks, 'ms': ms}
+    ex.next = {'exit':ex}
     
     main_graphs = Graph(fs)
     
     while True:
         
-        input(f'{main_graphs.current_node}')
         main_graphs.run()
 
 # =============================================================================
@@ -177,6 +176,9 @@ def main():
 #     exit()
 # =============================================================================
 
+# =============================================================================
+# # %%
+# =============================================================================
 
 if __name__ == '__main__':
     main()
