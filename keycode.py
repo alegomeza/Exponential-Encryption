@@ -67,7 +67,7 @@ def inverse_module(n: int, mod: int) -> int:
 
 class KeyCode:
 
-    def __init__(self, k1=None, k2=None, k3=None) -> None:
+    def __init__(self, k1:int = None, k2:int = None, k3:int = None) -> None:
         self.k1 = k1
         self.k2 = k2
         self.k3 = k3

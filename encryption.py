@@ -21,7 +21,7 @@ KEYS = {'#': '35', 'Q': '61', '0': '66', ' ': '88', 'W': '81', 'k': '46',
 
 class Encryption:
     
-    def __init__(self, message : str = None, key_code : KeyCode = None) -> None:
+    def __init__(self, key_code : KeyCode = None, message : str = None) -> None:
         if message is None:
             self.message = '~'
         else:

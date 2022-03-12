@@ -1,8 +1,10 @@
-from message import Message
+from graphs import *
 from keycode import KeyCode
 from encryption import Encryption
+# from graphs import Graph, Node
 import os
 
+gdict = {}
 
 def clear_screen(func):
     def wrapper(*args, **kwargs):
@@ -63,16 +65,15 @@ def message_screen():
 
 
 @clear_screen
-def key_screen():
+def key_screen(data):
     print('::: [K]ey_code :::')
-    key_code = KeyCode()
     answer = str(input('Do you already have a key? [y/n] ')).upper()
     if answer == 'Y':
-        print('Enter the values of p,e and d.')
+        print('Enter the values of k1, k2 and k3.')
         try:
-            key_code.p = int(input('p:? '))
-            key_code.e = int(input('e:? '))
-            key_code.d = int(input('d:? '))
+            data[0].k1 = int(input('k1:? '))
+            data[0].k2 = int(input('k2:? '))
+            data[0].k3 = int(input('k3:? '))
         except ValueError:
             input('The values entered are wrong.')
             return key_screen()
@@ -86,9 +87,9 @@ def key_screen():
         print('... generating key ...')
         key_code.generate_key()
         print(f'The values  of p, e and d are')
-        print(f'p: {key_code.p}')
-        print(f'e: {key_code.e}')
-        print(f'd: {key_code.d}')
+        print(f'k1: {key_code.k1}')
+        print(f'k2: {key_code.k2}')
+        print(f'k3: {key_code.k3}')
         input('Copy the values to a safe place.')
         return key_code
     else:
@@ -97,21 +98,41 @@ def key_screen():
 
 
 @clear_screen
-def main_screen() -> str:
+def main_screen(encryp : Encryption) -> str:
     print('''
     Greetings! The options are:
 
-    [K]ey_code
-    [M]essage    
-    [E]xit
-    ''')
-    answer = str(input('Which option do you choose? ')).upper()
-    return answer
+    Key Code    [K]
+    Message     [M]
+    Exit        [Any other key]''')
+    answer = str(input('''
+    Which option do you choose? ''')).upper()
+    return answer , encryp
 
 
 @clear_screen
 def run():
+    
+    encryp = Encryption()
+    
+    # first screen
+    fs = Node(main_screen, encryp) 
+    
+    # key screen
+    ks = Node(key_screen)
+    
+    # message screen
+    ms = Node(message_screen)
+    
+    # node for exit
+    exit = Node(exit)
+    
+    fs.next = {'K': ks, 'M': ms, 'E': exit}
+    ks.next = {'P': fs, 'M': ms}
+    ks.next = {'P': fs, 'K': ks}
+
     answer = main_screen()
+    
     if answer == 'K':
         key_code = key_screen()
         input('Now you need a message.')
@@ -132,6 +153,8 @@ def run():
     else:
         input('Option not found, try again.')
         run()
+        
+    exit()
 
 
 if __name__ == '__main__':
