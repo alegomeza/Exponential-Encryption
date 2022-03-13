@@ -1,5 +1,42 @@
 from keycode import KeyCode
 
+KEYS1 = {'ü': '83', ']': '73', ':': '17', 'S': '33', 's': '12', 'd': '57', 
+         'L': '65', 'f': '01', '.': '67', 'ñ': '89', 'Y': '68', ',': '31',
+         '_': '14', 'ó': '32', '>': '07', 'Q': '41', 'l': '56', 'n': '90',
+         '6': '78', 'x': '71', 'U': '28', 'ú': '37', 'w': '44', ' ': '10',
+         '{': '58', 'D': '70', '(': '51', 'h': '86', 'E': '34', '!': '09',
+         '4': '22', 'X': '98', '¿': '26', 'F': '29', '°': '93', '-': '97',
+         '*': '99', '8': '18', 'Ñ': '19', '$': '79', '?': '60', 'N': '45',
+         'k': '35', 'b': '21', '[': '47', 'j': '04', 'é': '59', 'K': '36',
+         'J': '42', '5': '74', 'u': '85', 'G': '63', 'i': '24', '}': '88',
+         '/': '52', 'y': '96', ')': '55', 'v': '77', 'Z': '02', 'W': '54',
+         '2': '50', 'B': '46', '¡': '39', 'á': '87', 'O': '43', 'm': '15',
+         '3': '48', '%': '16', '<': '06', '1': '66', 'T': '92', 'z': '49',
+         '"': '38', '~': '75', 'M': '72', '#': '20', 'C': '82', '0': '30',
+         'q': '84', 'í': '27', '+': '95', 'V': '69', 'o': '40', '9': '61',
+         '=': '13', 'a': '80', 'R': '11', ';': '08', 'I': '25', '&': '81',
+         'A': '62', 'g': '53', '7': '64', 'H': '03', 'e': '94', 'c': '00',
+         'r': '76', 'P': '23', 't': '05', 'p': '91'}
+
+KEYS2 = {'83': 'ü', '73': ']', '17': ':', '33': 'S', '12': 's', '57': 'd',
+         '65': 'L', '01': 'f', '67': '.', '89': 'ñ', '68': 'Y', '31': ',',
+         '14': '_', '32': 'ó', '07': '>', '41': 'Q', '56': 'l', '90': 'n',
+         '78': '6', '71': 'x', '28': 'U', '37': 'ú', '44': 'w', '10': ' ',
+         '58': '{', '70': 'D', '51': '(', '86': 'h', '34': 'E', '09': '!',
+         '22': '4', '98': 'X', '26': '¿', '29': 'F', '93': '°', '97': '-',
+         '99': '*', '18': '8', '19': 'Ñ', '79': '$', '60': '?', '45': 'N',
+         '35': 'k', '21': 'b', '47': '[', '04': 'j', '59': 'é', '36': 'K',
+         '42': 'J', '74': '5', '85': 'u', '63': 'G', '24': 'i', '88': '}',
+         '52': '/', '96': 'y', '55': ')', '77': 'v', '02': 'Z', '54': 'W',
+         '50': '2', '46': 'B', '39': '¡', '87': 'á', '43': 'O', '15': 'm',
+         '48': '3', '16': '%', '06': '<', '66': '1', '92': 'T', '49': 'z',
+         '38': '"', '75': '~', '72': 'M', '20': '#', '82': 'C', '30': '0',
+         '84': 'q', '27': 'í', '95': '+', '69': 'V', '40': 'o', '61': '9',
+         '13': '=', '80': 'a', '11': 'R', '08': ';', '25': 'I', '81': '&',
+         '62': 'A', '53': 'g', '64': '7', '03': 'H', '94': 'e', '00': 'c',
+         '76': 'r', '23': 'P', '05': 't', '91': 'p'}
+
+
 KEYS = {'#': '35', 'Q': '61', '0': '66', ' ': '88', 'W': '81', 'k': '46',
         '=': '75', 'E': '80', '+': '74', 'd': '20', '1': '43', 'z': '71',
         'F': '94', ';': '10', 'I': '47', 'U': '16', 'M': '09', 'e': '26',
@@ -19,6 +56,35 @@ KEYS = {'#': '35', 'Q': '61', '0': '66', ' ': '88', 'W': '81', 'k': '46',
         '6': '17', ',': '98'}
 
 
+def chr_to_dig(text:str) -> str:
+    text_aux = ''
+    for chr in text:
+        text_aux += KEYS[chr]
+    return text_aux
+    
+def group_dig(text:str, max_len:int) -> list:
+    if len(text) % max_len == 0:
+        rang = len(text) // max_len
+    else:
+        rang = (len(text) // max_len) + 1
+    dig_lis = [text[max_len * idx: max_len * (idx + 1)] for idx in range(rang)]
+    while len(dig_lis[-1]) < max_len:
+        dig_lis[-1] += '75'
+    return dig_lis
+    
+def dig_to_int(dig_lis:list) -> list:
+    int_lis = [int(dig) for dig in dig_lis]
+    return int_lis
+
+def power_tower(P, mod, ran):
+    powers = [P % mod]
+    for _ in range(1, ran):
+        power = powers[0] ** 2 % mod
+        powers.insert(0, power)
+    return powers
+
+
+
 class Encryption:
     
     def __init__(self, key_code : KeyCode = None, message : str = None) -> None:
@@ -31,35 +97,17 @@ class Encryption:
     def __str__(self) -> str:
         return self.message
     
-    def _dig_to_str(self, text:str) -> str:
+    def _dig_to_chr(self, text:str) -> str:
         lenght = len(text) // 2
         text_aux = ''
-        dig = [text[index * 2: (index + 1) * 2]
-                       for index in range(lenght)]
+        dig = [text[index * 2: (index + 1) * 2] for index in range(lenght)]
         for num in dig:
             for keys, values in KEYS.items():
                 if values == num:
                     text_aux += keys
         return text_aux
     
-    def _str_to_dig(self, text:str) -> str:
-        text_aux = ''
-        for chr in text:
-            text_aux += KEYS[chr]
-        return text_aux
     
-    def _group_dig(self, text:str) -> list:
-        lenght = len(str(self.key_code._k1))
-        max_len = (lenght - 1) // 2
-        rang = (len(text) // max_len) +1
-        dig_lis = [text[max_len * idx: max_len * (idx + 1)] for idx in range(rang)]
-        while len(dig_lis[-1]) < max_len:
-            dig_lis[-1] += '55'
-        return dig_lis
-    
-    def _dis_to_int(self, dig_lis:list) -> list:
-        int_lis = [int(dig) for dig in dig_lis]
-        return int_lis
     
     
         

@@ -8,11 +8,17 @@ def odd_length(func):
         while len(str(p)) % 2 == 0:
             p = func(*args, **kwargs)
         return p
-
     return wrapper
 
+def pair_length(func):
+    def wrapper(*args, **kwargs):
+        p = func(*args, **kwargs)
+        while len(str(p)) % 2 == 1:
+            p = func(*args, **kwargs)
+        return p
+    return wrapper
 
-@odd_length
+@pair_length
 def generate_prime(bits: int) -> int:
     # This function generates a prime number
     search = True
