@@ -46,7 +46,7 @@ k3=75355938421
 
 
 # Mensaje inicial
-text = 'Mesajoo dea prooba'
+text = 'Meseajoo dea proobia'
 
 
 # Tranformamos a digitos
@@ -108,22 +108,32 @@ for idx in range(len(int_lis)):
     cip = result
     while len(cip) < max_len + 2:
         cip = '0' + cip
-    input(f'{cip} - {len(str(cip))}')
+    # input(f'{cip} - {len(str(cip))}')
     ci_mess += cip
 
-chi_mess = ''
+text_cip = ''
 lenght = len(ci_mess) // 2
 
-dig = [ci_mess[index * 2: (index + 1) * 2] for index in range(lenght)]
-for num in dig:
-    for keys, values in KEYS.items():
-        if values == num:
-            chi_mess += keys
+ci_mess_idx = [ci_mess[2*idx:2*(idx+1)] for idx in range(lenght)]
+
+for idx in ci_mess_idx:
+    text_cip += KEYS2[idx]
+
     
 # =============================================================================
 # AHORA A DECIFRAR EL MSJE
 # =============================================================================
 
+text_aux_2 = ''
+for chr in text_cip:
+    text_aux_2 += KEYS1[chr]
+    
+max_len_2 = len(str(k1))
+rang_2 = len(text_aux_2) // max_len_2
+
+dig_lis_2 = [text_aux_2[max_len_2 * idx: max_len_2 * (idx + 1)]\
+             for idx in range(rang_2)]
+    
 
 
 
