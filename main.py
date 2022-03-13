@@ -46,25 +46,26 @@ def encrypt_or_decrypt(message, key_code):
 
 
 @clear_screen
-def message_screen():
-    message = Message(text='')
-    print('::: [M]essage :::')
-    answer = str(input('Is the message encrypted?[y/n] ')).upper()
-    if answer == 'Y':
-        try:
-            text = str(int(input('What is your message? ')))
-            message.text = text
-            message.encryption = True
-            return message
-        except ValueError:
-            input('The values entered are wrong')
-            return message_screen()
-    elif answer == 'N':
+def message_screen(encryp : Encryption):
+    print('\t\t::: [M]essage :::')
+    print('''
+    New Message     [N]
+    Decrypt Message [D]
+    Encrypt Message [E]
+    View Message    [V]''')
+    answer = str(input('\tWhich option do you choose? ')).upper()
+    if answer == 'N':
         text = str(input('What is your message? '))
-        message.text = text
-        return message
+        encryp.message = text
+        print(encryp)
+        return 'ms' , encryp
+        
+    # elif answer == 'N':
+    #     text = str(input('What is your message? '))
+    #     message.text = text
+    #     return message
     else:
-        input('Option not found, try again.')
+        input('\tOption not found, try again.')
         return message_screen()
 
 
@@ -79,14 +80,14 @@ def key_screen(encryp : Encryption):
             k2 = int(input('\tk2:?'))
             k3 = int(input('\tk3:?'))
             encryp.key_code = KeyCode(k1, k2, k3)
-            input('KeyCode is load')
+            input('\tKeyCode is load')
         except ValueError:
-            input('Value entered is wrong')
+            input('\tValue entered is wrong')
             return 'ks' , encryp
         return 'fs' , encryp
 
     elif answer == 'N':
-        print('... generating key ...')
+        print('... generating key')
         key_code = KeyCode()
         key_code.generate_key()
         encryp.key_code = key_code

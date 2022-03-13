@@ -30,11 +30,46 @@ class Encryption:
         
     def __str__(self) -> str:
         return self.message
+    
+    def _dig_to_str(self, text:str) -> str:
+        lenght = len(text) // 2
+        text_aux = ''
+        dig = [text[index * 2: (index + 1) * 2]
+                       for index in range(lenght)]
+        for num in dig:
+            for keys, values in KEYS.items():
+                if values == num:
+                    text_aux += keys
+        return text_aux
+    
+    def _str_to_dig(self, text:str) -> str:
+        text_aux = ''
+        for chr in text:
+            text_aux += KEYS[chr]
+        return text_aux
+    
+    def _group_dig(self, text:str) -> list:
+        lenght = len(str(self.key_code._k1))
+        max_len = (lenght - 1) // 2
+        rang = (len(text) // max_len) +1
+        dig_lis = [text[max_len * idx: max_len * (idx + 1)] for idx in range(rang)]
+        while len(dig_lis[-1]) < max_len:
+            dig_lis[-1] += '55'
+        return dig_lis
+    
+    def _dis_to_int(self, dig_lis:list) -> list:
+        int_lis = [int(dig) for dig in dig_lis]
+        return int_lis
+    
+    
+        
+                
+    
 
-    def __str_to_int(self) -> str:
+    def _str_to_int(self) -> str:
         # Takes a string of characters and 
         # transforms them into a list of integers
-        lenght = len(str(self.key_code.k1))
+        lenght = len(str(self.key_code._k1))
         max_lenght = (lenght - 1) // 2
         character_list = self.message
         integer_list = []
@@ -50,9 +85,10 @@ class Encryption:
         integer_list.append(group)
         while len(integer_list[-1]) < 2 * max_lenght:
             integer_list[-1] += '55'
+        input(f'{integer_list}')
         return integer_list
 
-    def __int_to_str(self) -> str:
+    def _int_to_str(self) -> str:
         # Takes a list of integers and 
         # transforms them into a string
         lenght = len(self.message) // 2
@@ -63,9 +99,9 @@ class Encryption:
             for keys, values in KEYS.items():
                 if values == num:
                     text += keys
-        return text
+        return text#.replace('ẍ','')
 
-    def __powers_towers(self, p: int, e: int) -> int:
+    def _powers_towers(self, p: int, e: int) -> int:
         # Function that calculates a tower of powers
         # to facilitate calculations.
         bin_e = list(bin(e))
@@ -74,34 +110,34 @@ class Encryption:
         powers = []
         for index in range(0, len(bin_e)):
             if index == 0:
-                c = p % self.key_code.k1
+                c = p % self.key_code._k1
                 powers.insert(0, c)
             else:
-                c = powers[0] ** 2 % self.key_code.k1
+                c = powers[0] ** 2 % self.key_code._k1
                 powers.insert(0, c)
         result = 1
         for index in range(len(bin_e)):
             if bin_e[index] == 1:
                 result *= powers[index]
-                result = result % self.key_code.k1
+                result = result % self.key_code._k1
         return result
 
-    def __encrypt_message(self) -> str:
+    def _encrypt_message(self) -> str:
         # modular power calculation is applied
-        integer_list = self.__str_to_int()
+        integer_list = self._str_to_int()
         integers = [int(num) for num in integer_list]
-        encrypted_integers = [self.__powers_towers(num, self.key_code.k2)
+        encrypted_integers = [self._powers_towers(num, self.key_code._k2)
                               for num in integers]
         encrypted_integers_list = [str(num) for num in encrypted_integers]
         ciphertext = ''
         for index in range(len(encrypted_integers_list)):
-            while len(encrypted_integers_list[index]) < len(str(self.key_code.k1)):
+            while len(encrypted_integers_list[index]) < len(str(self.key_code._k1)):
                 encrypted_integers_list[index] = '0' + encrypted_integers_list[index]
             ciphertext += encrypted_integers_list[index]
         return ciphertext
 
-    def __decipher_message(self):
-        length = len(str(self.key_code.k1))
+    def _decipher_message(self):
+        length = len(str(self.key_code._k1))
         encrypted_integers_list = []
         group = ''
         for index in range(1, len(self.message)):
@@ -113,7 +149,7 @@ class Encryption:
         group += self.message[-1]
         encrypted_integers_list.append(group)
         encrypted_integer = [int(num) for num in encrypted_integers_list]
-        integers = [self.__powers_towers(num, self.key_code.k3)\
+        integers = [self._powers_towers(num, self.key_code._k3)\
                     for num in encrypted_integer]
         integers_list = [str(num) for num in integers]
         decrypted_text = ''
@@ -127,11 +163,15 @@ class Encryption:
         if not self.key_code:
             print('Missing data in KeyCode')
         else:
-            self.message = self.__encrypt_message()
+            self.message = self._encrypt_message()
+            input(f'{self.message}')
+            # self.message = self._int_to_str() # Recent!
 
     def decipher_message(self):
         if not self.key_code:
             print('Missing data in KeyCode')
         else:
-            self.message = self.__decipher_message()
-            self.message = self.__int_to_str()
+            # self.message = self._str_to_int() ## Recent!
+            input(f'{self.message}')
+            self.message = self._decipher_message()
+            self.message = self._int_to_str()
