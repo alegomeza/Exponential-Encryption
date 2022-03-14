@@ -47,7 +47,7 @@ k3=75355938421
 
 
 # Mensaje inicial
-text = 'Meseajoo dea proobia'
+text = 'Sebastián Alejandro Gómez Ardila'
 
 
 # Tranformamos a digitos
@@ -73,71 +73,47 @@ while len(lis_dig[-1]) < max_len:
 # De str a int    
 lis_int = [int(dig) for dig in lis_dig]
 
-input(f'lis_dig = {lis_dig} \nlis_int = {lis_int}')
-
-# Torre de potencias
-
-# Calculamos el número binario de la potencia
-bin_k2 = str(bin(k2))
-bin_k2 = bin_k2[2:]
-
-
-# #2**0 = 1
-# powers = [lis_int[0] % k1]
-# # Resto de potencias
-# for _ in range(len(bin_k2) - 1):
-#     power = powers[0] ** 2 % k1
-#     print(power)
-#     powers.insert(0, power)
-
 # Para calcular la torre de potencias de un número
-def power_tower(num, mod, exp, max_power):
+def power_tower(num, mod, max_power):
     pow_tow = [num % mod]
     for _ in range(1, max_power):
         power = pow_tow[0] ** 2 % mod
         pow_tow.insert(0, power)
     return pow_tow
 
-text_dig_c = ''
-
-for index in range(len(lis_int)):
-    # Calculamos la torre de potencia para cada int en lis_int    
-    powers = power_tower(lis_int[index], k1, len(bin_k2))
+# Para calcular (num**exp) %mod
+def power_mod(num, exp, mod):
     
-    # Calculamos num ** k2 con ayuda de la torre de potencias 
-    # y la expresión en bin del exponente
+    bin_exp = bin(exp)
+    bin_exp = bin_exp[2:]
+    max_power = len(bin_exp)
+    
+    pow_tow = power_tower(num, mod, max_power)
+    
     result = 1
-    for idx in range(1 ,len(bin_k2)):
-        if bin_k2[idx] == '1':
-            result *= powers[idx]
-            result = result % k1
-    
-    # int a str
-    cip = str(result)
-    
-    
-    
-    # Completamos la longitud del str a la de k1 (mod) con ceros al inicio 
-    # para que no altere el valor implicito del int
-    while len(cip) < max_len + 2:
-        cip = '0' + cip
-    # Concatenamos para entregar un una sola línea de dígitos
-    text_dig_c += cip
-    
-    
-    input(f'index={index} - int={result} - str={cip}\
- len{len(cip)} - total={text_dig_c}')
-    
-text_c = ''
-lenght = len(text_dig_c) // 2
+    for idx in range(max_power):
+        if bin_exp[idx] == '1':
+            result *= pow_tow[idx]
+            result %= mod
+    return result
 
-# Agrupamos los dígitos en pares (dos números) para dig -> chr
-text_dig_c_idx = [text_dig_c[2*idx:2*(idx+1)] for idx in range(lenght)]
 
-# De dígitos a caracteres
-for idx in text_dig_c_idx:
-    text_c += KEYS2[idx]
 
+lis_int_c = [power_mod(num, k2, k1) for num in lis_int]
+
+lis_dig_c = []
+
+for num in lis_int_c:
+    dig = str(num)
+    while len(dig) < max_len + 2:
+        dig = '0' + dig
+    lis_dig_c.append(dig)
+
+text_dig_c = ''.join(lis_dig_c)
+
+text_c = ''.join([KEYS2[text_dig_c[2*idx:2*(idx + 1)]]\
+                  for idx in range(len(text_dig_c) // 2) ])
+    
     
 # =============================================================================
 # AHORA A DECIFRAR EL MSJE
