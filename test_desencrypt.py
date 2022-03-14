@@ -36,112 +36,98 @@ KEYS2 = {'83': 'ẍ', '73': ']', '17': ':', '33': 'S', '12': 's', '57': 'd',
          '62': 'A', '53': 'g', '64': '7', '03': 'H', '94': 'e', '00': 'c',
          '76': 'r', '23': 'P', '05': 't', '91': 'p'}
 
-# =============================================================================
-# k1=1054008758443
-# k2=352957235
-# k3=16787875721
-# =============================================================================
 k1=140364644941
 k2=775080661
 k3=75355938421
 
-
-# Mensaje inicial
-text = 'Meseajoo dea proobia'
-
+# Mensaje cifrado
+text_c = '<H%U>&jWTT]y=puuFzRqH I('
 
 # Tranformamos a digitos
-text_dig = ''
-for char in text:
-    text_dig += KEYS1[char]
-
-
+text_dig_c = ''
+for char in text_c:
+    text_dig_c += KEYS1[char]
+    
 # Generamos grupos de digitos de acuerdo a
 # la longitud de k1    
-max_len = len(str(k1)) - 2
-if len(text_dig) % max_len == 0:
-    rang = len(text_dig) // max_len
-else:
-    rang = (len(text_dig) // max_len) + 1
-lis_dig = [text_dig[max_len * idx: max_len * (idx + 1)] for idx in range(rang)]
-
-
-# Completamos el grupo
-while len(lis_dig[-1]) < max_len:
-    lis_dig[-1] += '83'
+max_len = len(str(k1))
+rang = len(text_dig_c) // max_len
+lis_dig_c = [text_dig_c[max_len * idx: max_len * (idx + 1)] for idx in range(rang)]
 
 # De str a int    
-lis_int = [int(dig) for dig in lis_dig]
+lis_int_c = [int(dig) for dig in lis_dig_c]
 
-input(f'lis_dig = {lis_dig} \nlis_int = {lis_int}')
+input(f'lis_dig_c = {lis_dig_c} \nlis_int_c = {lis_int_c}')
 
 # Torre de potencias
 
 # Calculamos el número binario de la potencia
-bin_k2 = str(bin(k2))
-bin_k2 = bin_k2[2:]
-
-
-# #2**0 = 1
-# powers = [lis_int[0] % k1]
-# # Resto de potencias
-# for _ in range(len(bin_k2) - 1):
-#     power = powers[0] ** 2 % k1
-#     print(power)
-#     powers.insert(0, power)
+bin_k3 = str(bin(k3))
+bin_k3 = bin_k3[2:]
 
 # Para calcular la torre de potencias de un número
-def power_tower(num, mod, exp, max_power):
+def power_tower(num, mod, max_power):
     pow_tow = [num % mod]
     for _ in range(1, max_power):
         power = pow_tow[0] ** 2 % mod
         pow_tow.insert(0, power)
     return pow_tow
 
-text_dig_c = ''
+text_dig = ''
 
-for index in range(len(lis_int)):
+for index in range(len(lis_int_c)):
     # Calculamos la torre de potencia para cada int en lis_int    
-    powers = power_tower(lis_int[index], k1, len(bin_k2))
+    powers = power_tower(lis_int_c[index], k1, len(bin_k3))
     
     # Calculamos num ** k2 con ayuda de la torre de potencias 
     # y la expresión en bin del exponente
     result = 1
-    for idx in range(1 ,len(bin_k2)):
-        if bin_k2[idx] == '1':
+    for idx in range(1 ,len(bin_k3)):
+        if bin_k3[idx] == '1':
             result *= powers[idx]
             result = result % k1
     
     # int a str
-    cip = str(result)
-    
+    desc = str(result)
     
     
     # Completamos la longitud del str a la de k1 (mod) con ceros al inicio 
     # para que no altere el valor implicito del int
-    while len(cip) < max_len + 2:
-        cip = '0' + cip
+    while len(desc) < max_len:
+        desc = '0' + desc
     # Concatenamos para entregar un una sola línea de dígitos
-    text_dig_c += cip
+    text_dig += desc
     
+    input(f'index={index} - int={result} - str={desc}\
+ len{len(desc)} - total={text_dig}')
     
-    input(f'index={index} - int={result} - str={cip}\
- len{len(cip)} - total={text_dig_c}')
-    
-text_c = ''
-lenght = len(text_dig_c) // 2
+
+text = ''
+lenght = len(text_dig) // 2
 
 # Agrupamos los dígitos en pares (dos números) para dig -> chr
-text_dig_c_idx = [text_dig_c[2*idx:2*(idx+1)] for idx in range(lenght)]
+text_dig_idx = [text_dig[2*idx:2*(idx+1)] for idx in range(lenght)]
 
 # De dígitos a caracteres
-for idx in text_dig_c_idx:
-    text_c += KEYS2[idx]
+for idx in text_dig_idx:
+    text += KEYS2[idx]
 
-    
-# =============================================================================
-# AHORA A DECIFRAR EL MSJE
-# =============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -18,7 +18,7 @@ def pair_length(func):
         return p
     return wrapper
 
-@pair_length
+@odd_length
 def generate_prime(bits: int) -> int:
     # This function generates a prime number
     search = True
