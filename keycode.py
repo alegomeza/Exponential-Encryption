@@ -91,8 +91,11 @@ class KeyCode:
     def __str__(self) -> str:
         data = f'k1={str(self._k1)}\nk2={str(self._k2)}\nk3={str(self._k3)}'
         return data
+    
+    def __call__(self):
+        return self._generate_key()
 
-    def generate_key(self, bytes_k1: int = 40, bytes_k2: int = 30) -> None:
+    def _generate_key(self, bytes_k1: int = 40, bytes_k2: int = 30) -> None:
         
         if self._first_time:
             self._k1 = generate_prime(bytes_k1)
@@ -101,3 +104,16 @@ class KeyCode:
             self._first_time = False
         else:
             print('The KeyCode can generate keys only once')
+            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

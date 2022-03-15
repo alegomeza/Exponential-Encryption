@@ -47,7 +47,8 @@ k3=75355938421
 
 
 # Mensaje inicial
-text_c = '!Pé~8" (RHí) @ANXCjcbZ<>fOVijVsBgz¡"<Ci=Td'
+# text_c = '!Pé~8" (RHí) @ANXCjcbZ<>fOVijVsBgz¡"<Ci=Td'
+text_c = 'RúG0K1>/bbp¡=3E_W0<AgMá!sm@i S'
 
 
 # Tranformamos a digitos

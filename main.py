@@ -2,6 +2,7 @@ from graphs import Node, Graph
 from keycode import KeyCode
 from encryption import Encryption
 # from graphs import Graph, Node
+from time import sleep
 import os
 
 gdict = {}
@@ -15,107 +16,164 @@ def clear_screen(func):
 
 
 def exit_(data = None):
+    os.system('clear')
     exit()
     return 'exit' , data
 
-@clear_screen
-def encrypt_or_decrypt(message, key_code):
-    print('You have a message and key')
-    encryption = Encryption(message=message, key_code=key_code)
-
-    def encrypt():
-        encryption.encrypt_message()
-        print('This is the message:')
-        print(message.text)
-        input()
-
-    def decrypt():
-        encryption.decipher_message()
-        print('This is the message:')
-        print(message.text)
-        input()
-
-    if message.encryption:
-        print('The message is encrypted')
-        print('... decrypting')
-        return decrypt()
-    else:
-        print('The message is decrypted')
-        print('... encrypting')
-        return encrypt()
-
+def time_sleep(seconds:int):
+    for second in range(seconds):
+        second_rest = seconds - second
+        print(f'\t{second_rest} seconds')
+        sleep(1)
 
 @clear_screen
 def message_screen(encryp : Encryption):
     print('\t\t::: [M]essage :::')
     print('''
-    New Message     [N]
-    Decrypt Message [D]
-    Encrypt Message [E]
-    View Message    [V]''')
-    answer = str(input('\tWhich option do you choose? ')).upper()
-    if answer == 'N':
-        text = str(input('What is your message? '))
+\tInput Message     [I]
+\tEncrypt Message   [E]
+\tDecrypt Message   [D]
+\tView Message      [V]
+\tReturn            [R]''')
+    answer = str(input('\n\tWhich option do you choose? ')).upper()
+    if answer == 'I':
+        text = str(input('\n\tWhat is your message?\n\n\t'))
         encryp.message = text
-        print(encryp)
+        sure = False
+        while not sure:
+            print('\n\tYour message is:')
+            print(f'\n\t{encryp}')
+            ans = str(input('\n\tAre you sure?[Y] ')).upper()
+            if ans == 'Y' or ans == '':
+                sure = True
+            else:
+                text = str(input('\n\tWhat is your message?\n\n\t'))
+        input('\n\tThe message is load')
         return 'ms' , encryp
-        
-    # elif answer == 'N':
-    #     text = str(input('What is your message? '))
-    #     message.text = text
-    #     return message
+    
+    elif answer == 'E':
+        if encryp.key_code:
+            print(f'\n\t{encryp}')
+            print('\n\tEncrypting message')
+            encryp.encrypt_message()
+            input(f'\n\t{encryp}')
+            return 'ms' , encryp
+        else:
+            print('\n\tThere are currently no keys')
+            ans = str(input('\n\tDo you input keys?[Y]/N ')).upper()
+            if ans == 'Y' or ans == '':
+                return 'ks' , encryp
+            elif ans == 'N':
+                return 'ms' , encryp
+            else:
+                input('\tOption not found')
+                return 'fs' , encryp
+            
+    elif answer == 'D':
+        if encryp.key_code:
+            print(f'\n\t{encryp}')
+            print('\n\tDecrypting message')
+            encryp.decipher_message()
+            input(f'\n\t{encryp}')
+            return 'ms' , encryp
+        else:
+            print('\n\tThere are currently no keys')
+            ans = str(input('\n\tDo you input keys?[Y]/N ')).upper()
+            if ans == 'Y' or ans == '':
+                return 'ks' , encryp
+            elif ans == 'N':
+                return 'ms' , encryp
+            else:
+                input('\tOption not found')
+                return 'fs' , encryp
+            
+    elif answer == 'V':
+        print('\n\tThis is the current message:')
+        input(f'\n\t{encryp}')
+        return 'ms' , encryp
+            
+    elif answer == 'R':
+        return 'fs' , encryp
+    
     else:
-        input('\tOption not found, try again.')
-        return message_screen()
+        input('\n\tOption not found, try again!')
+        return 'ms' , encryp
+
 
 
 @clear_screen
 def key_screen(encryp : Encryption):
     print('\t\t::: [K]ey_code :::\n')
-    answer = str(input('\tDo you have a KeyCode? [y/n] ')).upper()
-    if answer == 'Y':
-        print('\tEnter the values of k1, k2 and k3.\n')
+    print('''
+\tGenerate keys     [G]
+\tInput keys        [I]
+\tView keys         [V]
+\tReturn            [R]''')
+    answer = str(input('\n\tWhich option do you choose? ')).upper()
+    if answer == 'G':
+        print('\n\t... generating key')
+        key_code = KeyCode()
+        key_code()
+        encryp.key_code = key_code
+        print('\n\tThe values  of k1, k2 and k3 are\n')
+        print(str(encryp.key_code).replace('k','\tk'))
+        input('\n\tCopy the values to a safe place.')
+        return 'ks' , encryp
+        
+    elif answer == 'I':
+        print('\n\tEnter the values of k1, k2 and k3')
         try:
-            k1 = int(input('\tk1:?'))
-            k2 = int(input('\tk2:?'))
-            k3 = int(input('\tk3:?'))
+            sure = False
+            while not sure:
+                k1 = int(input('\n\tk1:? '))
+                k2 = int(input('\tk2:? '))
+                k3 = int(input('\tk3:? '))
+                print(f'\n\tYour code keys:\n\n\tk1: {k1}\n\tk2: {k2}\n\tk3: {k3}')
+                ans = str(input('\n\tAre you sure?[Y] ')).upper()
+                if ans == 'Y' or ans == '':
+                    sure = True
+                else:
+                    input('\n\tEnter the values of k1, k2 and k3')
             encryp.key_code = KeyCode(k1, k2, k3)
-            input('\tKeyCode is load')
+            input('\n\tKeyCode is load')
         except ValueError:
             input('\tValue entered is wrong')
             return 'ks' , encryp
-        return 'fs' , encryp
-
-    elif answer == 'N':
-        print('... generating key')
-        key_code = KeyCode()
-        key_code.generate_key()
-        encryp.key_code = key_code
-        print('''
-    The values  of k1, k2 and k3 are\n''')
-        print(str(encryp.key_code).replace('k','\tk'))
-        input('    Copy the values to a safe place.')
-        return 'fs' , encryp
-    else:
-        input('Option not found, try again.')
         return 'ks' , encryp
     
-    input('here2')
+    elif answer == 'V':
+        if encryp.key_code:
+            print('\n\tThe keys are currently:\n')
+            print(str(encryp.key_code).replace('k','\tk'))
+            print(' ')
+            time_sleep(5)
+            return 'ks' , encryp
+        else:
+            input('\n\tThere are currently no keys')
+            return 'ks' , encryp
+        
+    elif answer == 'R':
+        return 'fs' , encryp
+    
+    else:
+        input('\n\tOption not found, try again!')
+        return 'ks' , encryp
+    
+    
 
 @clear_screen
 def main_screen(encryp : Encryption) -> str:
     convert_answer = {'K':'ks', 'M':'ms', 'E':'exit'}
-    print('''
-    Greetings! The options are:
+    print('''\n\tGreetings! The options are:
 
-    Key Code    [K]
-    Message     [M]
-    Exit        [E]''')
+\tKey Code    [K]
+\tMessage     [M]
+\tExit        [E]''')
     try:
         answer = str(input('\n\tWhich option do you choose? ')).upper()
         answer = convert_answer[answer]
     except KeyError:
-        input('\tOption not found, try again.')
+        input('\n\tOption not found, try again.')
         return 'fs' , encryp
     return answer , encryp
 
@@ -182,4 +240,17 @@ def main():
 # =============================================================================
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+        
+    except KeyboardInterrupt:
+        os.system('clear')
+        quit()
+        
+        
+        
+        
+        
+        
+        
+        

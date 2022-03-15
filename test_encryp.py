@@ -47,7 +47,7 @@ k3=75355938421
 
 
 # Mensaje inicial
-text = 'Sebastián Alejandro Gómez Ardila'
+text = 'Otra prueba de una tantas'
 
 
 # Tranformamos a digitos
@@ -70,7 +70,7 @@ lis_dig = [text_dig[max_len * idx: max_len * (idx + 1)] for idx in range(rang)]
 while len(lis_dig[-1]) < max_len:
     lis_dig[-1] += '83'
 
-# De str a int    
+# De dig a int    
 lis_int = [int(dig) for dig in lis_dig]
 
 # Para calcular la torre de potencias de un número
@@ -98,19 +98,24 @@ def power_mod(num, exp, mod):
     return result
 
 
-
+# Los enteros en la lista son modificados por la operación (num**exp) %mod
+# (Aquí es cuando se encripta el mensake)
 lis_int_c = [power_mod(num, k2, k1) for num in lis_int]
 
 lis_dig_c = []
 
+# De enteros se pasan a dígitos a la vez que se le agrega un cero para 
+# lograr una longotud equivalente a la del mod
 for num in lis_int_c:
     dig = str(num)
     while len(dig) < max_len + 2:
         dig = '0' + dig
     lis_dig_c.append(dig)
 
+# Se unen los dígitos en una sola línea
 text_dig_c = ''.join(lis_dig_c)
 
+# Se dig se pasan a caracteres
 text_c = ''.join([KEYS2[text_dig_c[2*idx:2*(idx + 1)]]\
                   for idx in range(len(text_dig_c) // 2) ])
     
