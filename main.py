@@ -1,7 +1,6 @@
 from graphs import Node, Graph
 from keycode import KeyCode
 from encryption import Encryption
-# from graphs import Graph, Node
 from time import sleep
 import os
 
@@ -10,15 +9,11 @@ gdict = {}
 def clear_screen(func):
     def wrapper(*args, **kwargs):
         os.system('clear')
+        print('By: Alejoock - GitHub: https://github.com/alejogomez1/Exponential-Encryption')
         return func(*args, **kwargs)
 
     return wrapper
 
-
-def exit_(data = None):
-    os.system('clear')
-    exit()
-    return 'exit' , data
 
 def time_sleep(seconds:int):
     for second in range(seconds):
@@ -27,14 +22,26 @@ def time_sleep(seconds:int):
         sleep(1)
 
 @clear_screen
+def exit_(data = None):
+    input('\n\t\t::: Bye! :::')
+    os.system('clear')
+    exit()
+    return 'exit' , data
+
+
+@clear_screen
 def message_screen(encryp : Encryption):
-    print('\t\t::: [M]essage :::')
-    print('''
-\tInput Message     [I]
-\tEncrypt Message   [E]
-\tDecrypt Message   [D]
-\tView Message      [V]
-\tReturn            [R]''')
+    if encryp.key_code:
+        there_is_key_code = '(There are keys)'
+    else:
+        there_is_key_code = '(There are not keys)'
+    print('\n\t\t::: [M]essage :::')
+    print(f'''
+\t[I]nput Message
+\t[E]ncrypt Message \t{there_is_key_code}
+\t[D]ecrypt Message
+\t[V]iew Message
+\t[R]eturn''')
     answer = str(input('\n\tWhich option do you choose? ')).upper()
     if answer == 'I':
         text = str(input('\n\tWhat is your message?\n\n\t'))
@@ -66,7 +73,7 @@ def message_screen(encryp : Encryption):
             elif ans == 'N':
                 return 'ms' , encryp
             else:
-                input('\tOption not found')
+                input('\n\tOption not found')
                 return 'fs' , encryp
             
     elif answer == 'D':
@@ -103,15 +110,20 @@ def message_screen(encryp : Encryption):
 
 @clear_screen
 def key_screen(encryp : Encryption):
-    print('\t\t::: [K]ey_code :::\n')
-    print('''
-\tGenerate keys     [G]
-\tInput keys        [I]
-\tView keys         [V]
-\tReturn            [R]''')
+    if encryp.key_code:
+        there_is_key_code = '(There are keys)'
+    else:
+        there_is_key_code = '(There are not keys)'
+    print('\n\t\t::: [K]ey_code :::')
+    print(f'''
+\t[G]enerate keys     
+\t[I]nput keys
+\t[V]iew keys   \t{there_is_key_code}
+\tRe[s]et
+\t[R]eturn''')
     answer = str(input('\n\tWhich option do you choose? ')).upper()
     if answer == 'G':
-        print('\n\t... generating key')
+        print('\n\t... generating keys')
         key_code = KeyCode()
         key_code()
         encryp.key_code = key_code
@@ -152,6 +164,10 @@ def key_screen(encryp : Encryption):
             input('\n\tThere are currently no keys')
             return 'ks' , encryp
         
+    elif answer == 'S':
+        encryp.key_code = None
+        return 'ks' , encryp
+    
     elif answer == 'R':
         return 'fs' , encryp
     
@@ -160,15 +176,20 @@ def key_screen(encryp : Encryption):
         return 'ks' , encryp
     
     
-
 @clear_screen
 def main_screen(encryp : Encryption) -> str:
+    if encryp.key_code:
+        there_is_key_code = '(There are keys)'
+    else:
+        there_is_key_code = '(There are not keys)'
     convert_answer = {'K':'ks', 'M':'ms', 'E':'exit'}
-    print('''\n\tGreetings! The options are:
+    print(f'''\n\t\t::: MAIN SCREEN :::
+          
+\tThe options are:
 
-\tKey Code    [K]
-\tMessage     [M]
-\tExit        [E]''')
+\t[K]ey Code    \t{there_is_key_code}
+\t[M]essage           
+\t[E]xit''')
     try:
         answer = str(input('\n\tWhich option do you choose? ')).upper()
         answer = convert_answer[answer]
@@ -208,49 +229,14 @@ def main():
         
         main_graphs.run()
 
-# =============================================================================
-#     answer = main_screen()
-#     
-#     if answer == 'K':
-#         key_code = key_screen()
-#         input('Now you need a message.')
-#         message = message_screen()
-#         encrypt_or_decrypt(message, key_code)
-#         run()
-# 
-#     elif answer == 'M':
-#         message = message_screen()
-#         input('Now you need a key_code.')
-#         key_code = key_screen()
-#         encrypt_or_decrypt(message, key_code)
-#         run()
-# 
-#     elif answer == 'E':
-#         exit()
-# 
-#     else:
-#         input('Option not found, try again.')
-#         run()
-#         
-#     exit()
-# =============================================================================
-
-# =============================================================================
-# # %%
-# =============================================================================
-
 if __name__ == '__main__':
     try:
+        print('\n\tGreetings! ')
         main()
         
     except KeyboardInterrupt:
         os.system('clear')
+        input('\n\n\t\tWhat happened!?')
+        os.system('clear')
         quit()
-        
-        
-        
-        
-        
-        
-        
         

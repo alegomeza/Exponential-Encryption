@@ -45,6 +45,7 @@ def tex_to_dig(text:str, KEYS:dict) -> str:
         except KeyError:
             dig_text += KEYS['?']
     return dig_text
+
     
 def dig_group(dig_text:str, max_len:int) -> list:
     if len(dig_text) % max_len == 0:
@@ -57,6 +58,7 @@ def dig_group(dig_text:str, max_len:int) -> list:
     while len(dig_lis[-1]) < max_len:
         dig_lis[-1] += '83'
     return dig_lis
+
     
 def diglis_to_intlis(dig_lis:list) -> list:
     return [int(dig) for dig in dig_lis]
@@ -85,6 +87,7 @@ def power_mod(num:int, exp:int, mod:int) -> int:
             result %= mod
     return result
 
+
 def exponential_cipher_lis(int_lis:list, exp:int, mod:int) -> list:
     return [power_mod(num, exp, mod) for num in int_lis]
 
@@ -103,11 +106,6 @@ def diglis_to_tex(dig_lis:list, KEYS:dict):
     dig_text = ''.join(dig_lis)
     return ''.join([KEYS2[dig_text[2*idx:2*(idx + 1)]]\
                   for idx in range(len(dig_text) // 2) ])
-
-
-
-
-
 
 
 
@@ -141,7 +139,7 @@ class Encryption:
             except:
                 input('\n\tSomething is wrong!\n')
         
-        pass
+        
 
     def decipher_message(self):
         if not self.key_code:
@@ -180,31 +178,4 @@ def run():
 
 if __name__ == '__main__':
     run()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
