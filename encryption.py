@@ -1,5 +1,68 @@
 from keycode import KeyCode
 
+Kc = 'ẍ\
+abcdefghijklmnñopqrstuvwxyz\
+ABCDEFGHIJKLMNÑOPQRSTUVWXYZ\
+0123456789áéíóú (),.!?;:"\
+|¿¡°#$%&/=+-*-_@~\
+[]{}<>'
+
+ran = len(Kc)
+
+dict_in = {Kc[idx]:int(idx) for idx in range(ran)}
+
+dict_out = {int(idx):Kc[idx] for idx in range(ran)}
+
+def open_text_in(text:str, ran:int, dict_in:dict) -> int :
+    l = len(text)
+    num = 0
+    for i in range(l):
+        num += dict_in[text[i]] * ran**(int(i))
+    return num
+
+
+def int_to_lis_int(num:int, max_len:int) -> list:
+    dig = str(num)
+    rang = ((len(dig) - 1) // max_len) + 1
+    res = len(dig) % max_len
+    if res == 0:
+        dig_lis = [dig[max_len*idx:max_len*(idx + 1)] for idx in range(rang)]
+    else:
+        dig_lis = [dig[:res]] + [dig[res + max_len*idx:res + max_len*(idx + 1)] \
+                               for idx in range(rang - 1)]
+    input(f'{dig_lis}')
+    return [int(dig) for dig in dig_lis]
+
+# =============================================================================
+# def exponential_cipher_lis(int_lis:list, exp:int, mod:int) -> list:
+#     return [power_mod(num, exp, mod) for num in int_lis]
+# =============================================================================
+
+def lis_int_to_int(int_lis:list, max_len:int) -> int:
+    dig_lis = []
+    for num in int_lis:
+        dig = str(num)
+        while len(dig) < max_len:
+            dig = '0' + dig
+        dig_lis.append(dig)
+    dig = ''.join(dig_lis)
+    return int(dig)
+    
+
+def open_text_out(num:int, ran:int, dict_out:dict) -> str :
+    text = ''
+    r , div = 1 , 1
+    while div != 0:
+        div = num // ran
+        r = num % ran
+        num = div
+        text += dict_out[r]
+    return text
+
+
+
+
+
 KEYS1 = {'ü': '83', ']': '73', ':': '17', 'S': '33', 's': '12', 'd': '57', 
          'L': '65', 'f': '01', '.': '67', 'ñ': '89', 'Y': '68', ',': '31',
          '_': '14', 'ó': '32', '>': '07', 'Q': '41', 'l': '56', 'n': '90',
