@@ -18,7 +18,7 @@ def pair_length(func):
         return p
     return wrapper
 
-@pair_length
+# @pair_length
 def generate_prime(bits: int) -> int:
     # This function generates a prime number
     search = True
@@ -95,7 +95,7 @@ class KeyCode:
     def __call__(self):
         return self._generate_key()
     
-    def _generate_key(self, bytes_k1: int = 50, bytes_k2: int = 55) -> None:
+    def _generate_key(self, bytes_k1: int = 40, bytes_k2: int = 40) -> None:
         
         if self._first_time:
             self._k1 = generate_prime(bytes_k1)

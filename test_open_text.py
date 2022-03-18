@@ -1,4 +1,8 @@
-from keycode import KeyCode
+# from keycode import KeyCode
+
+# k = KeyCode()
+# k()
+# print(k)
 
 Kc = 'ẍ\
 abcdefghijklmnñopqrstuvwxyz\
@@ -13,14 +17,14 @@ dict_in = {Kc[idx]:int(idx) for idx in range(ran)}
 
 dict_out = {int(idx):Kc[idx] for idx in range(ran)}
 
-k1=62569581079531
-k2=35152792042126009
-k3=29983486957339
+k1=29441884512389
+k2=25344283940824467
+k3=22473885012287
 
 max_len = len(str(k1))
 
 text = 'Texto re equis de pruebaaaaaaaa jejeje re cosas escriras al azar jaja!'
-text2 = 'ñ{Júo*0íóéEr]é]!NMN4Mb@¿<kúz$"F-oARYaEJ7d9m+%cíé3t~<p}adQñMM!Eñ|;&:[uOc!ñZ-,e'
+# text2 = '.fDWnX;9í3i=RhdoZ+i;gW $&@xT}I,)ẍ$a/=Ví á=U<ÑCo|H[rIk7Z[-j*I[7pBÑIví"bú°ú&s#'
 
 def open_text_in(text:str, ran:int, dict_in:dict) -> int :
     l = len(text)
@@ -30,7 +34,7 @@ def open_text_in(text:str, ran:int, dict_in:dict) -> int :
     return num
 
 num = open_text_in(text, ran, dict_in)
-num2 = open_text_in(text2, ran, dict_in)
+# num2 = open_text_in(text2, ran, dict_in)
 
 def int_to_lis_int(num:int, max_len:int) -> list:
     dig = str(num)
@@ -44,7 +48,7 @@ def int_to_lis_int(num:int, max_len:int) -> list:
     return [int(dig) for dig in dig_lis]
 
 int_lis = int_to_lis_int(num , max_len - 1)
-int_lis2 = int_to_lis_int(num2 , max_len )
+# int_lis2 = int_to_lis_int(num2 , max_len )
 
 def power_tower(num:int, mod:int, max_power:int) -> list:
     pow_tow = [num % mod]
@@ -74,7 +78,7 @@ def exponential_cipher_lis(int_lis:list, exp:int, mod:int) -> list:
     return [power_mod(num, exp, mod) for num in int_lis]
 
 c_int_lis = exponential_cipher_lis(int_lis, k2, k1)
-c_int_lis2 = exponential_cipher_lis(int_lis2, k3, k1)
+# c_int_lis2 = exponential_cipher_lis(int_lis2, k3, k1)
 
 
 def lis_int_to_int(int_lis:list, max_len:int) -> int:
@@ -88,7 +92,7 @@ def lis_int_to_int(int_lis:list, max_len:int) -> int:
     return int(dig)
 
 c_num = lis_int_to_int(c_int_lis, max_len)
-c_num2 = lis_int_to_int(c_int_lis2, max_len - 1)
+# c_num2 = lis_int_to_int(c_int_lis2, max_len - 1)
 
 def open_text_out(num:int, ran:int, dict_out:dict) -> str :
     text = ''
@@ -101,4 +105,4 @@ def open_text_out(num:int, ran:int, dict_out:dict) -> str :
     return text
 
 c_text = open_text_out(c_num, ran, dict_out)
-c_text2 = open_text_out(c_num2, ran, dict_out)
+# c_text2 = open_text_out(c_num2, ran, dict_out)
