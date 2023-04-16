@@ -9,7 +9,7 @@ gdict = {}
 def clear_screen(func):
     def wrapper(*args, **kwargs):
         os.system('clear')
-        print('By: Alejoock - GitHub: https://github.com/alejogomez1/Exponential-Encryption')
+        print('By: Alejoock - GitHub: https://github.com/alejogomeza/Exponential-Encryption')
         return func(*args, **kwargs)
 
     return wrapper
