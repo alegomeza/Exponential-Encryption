@@ -10,6 +10,7 @@ def odd_length(func):
         return p
     return wrapper
 
+
 def pair_length(func):
     def wrapper(*args, **kwargs):
         p = func(*args, **kwargs)
@@ -19,6 +20,8 @@ def pair_length(func):
     return wrapper
 
 # @pair_length
+
+
 def generate_prime(bits: int) -> int:
     # This function generates a prime number
     search = True
@@ -34,7 +37,7 @@ def generate_prime(bits: int) -> int:
 
 
 def euclidean_algorithm(a: int, b: int) -> tuple:
-    # output: gcd , n , m 
+    # output: gcd , n , m
     # where gcd = a*n + b*m
     # gcd = Greatest Common Divisor
     if b == 0:
@@ -55,7 +58,7 @@ def euclidean_algorithm(a: int, b: int) -> tuple:
 
 
 def coprime(n: int, bits: int) -> int:
-    # This function return a random coprime number of n 
+    # This function return a random coprime number of n
     search = True
     while search:
         m = random.getrandbits(bits)
@@ -73,7 +76,7 @@ def inverse_module(n: int, mod: int) -> int:
 
 class KeyCode:
 
-    def __init__(self, k1:int = None, k2:int = None, k3:int = None) -> None:
+    def __init__(self, k1: int = None, k2: int = None, k3: int = None) -> None:
         self._k1 = k1
         self._k2 = k2
         self._k3 = k3
@@ -81,22 +84,22 @@ class KeyCode:
             self._first_time = True
         else:
             self._first_time = False
-        
+
     def __bool__(self) -> bool:
         if (self._k1 is None) | (self._k2 is None) | (self._k3 is None):
             return False
         else:
             return True
-        
+
     def __str__(self) -> str:
         data = f'k1={str(self._k1)}\nk2={str(self._k2)}\nk3={str(self._k3)}'
         return data
-    
+
     def __call__(self):
         return self._generate_key()
-    
+
     def _generate_key(self, bytes_k1: int = 40, bytes_k2: int = 40) -> None:
-        
+
         if self._first_time:
             self._k1 = generate_prime(bytes_k1)
             self._k2 = coprime(self._k1 - 1, bytes_k2)
@@ -104,4 +107,3 @@ class KeyCode:
             self._first_time = False
         else:
             print('The KeyCode can generate keys only once')
-

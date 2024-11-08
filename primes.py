@@ -1,14 +1,15 @@
 from math import sqrt
 import time
 
+
 def prime_numbers_generator(max: int = None):
     p = 2
     yield p
-    
+
     while not max or p < max:
         p = 3
         yield p
-    
+
         while not max or p+2 <= max:
             is_prime = True
             p += 2
@@ -20,6 +21,7 @@ def prime_numbers_generator(max: int = None):
                 yield p
         break
 
+
 def run():
     f = prime_numbers_generator()
     for i in f:
@@ -27,6 +29,5 @@ def run():
         time.sleep(0.05)
 
 
-
-if __name__== '__main__':
+if __name__ == '__main__':
     run()
