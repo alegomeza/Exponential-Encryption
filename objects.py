@@ -7,8 +7,9 @@ from math import sqrt, gcd
 
 @dataclass
 class Letters:
-    """Letters that be used for make messages
-    
+    """
+    Letters that be used for make messages
+
     Attributes:
     KEYS: str -- letters without repetition 
 
@@ -17,6 +18,10 @@ class Letters:
     to_str() --
     """
     KEYS: str
+
+    def __post_init__(self):
+        if len(self.KEYS) != len(set(self.KEYS)):
+            raise ValueError("The are characters that repeat themselves")
 
     def range(self):
         return len(self.KEYS)
@@ -42,20 +47,20 @@ class Message:
 
 @dataclass
 class GenerateNumber:
-    k: int
+    length: int
     seed: Optional[int] = None
 
     def __post_init__(self):
-        if not isinstance(self.k, int) or self.k <= 0:
+        if not isinstance(self.length, int) or self.length <= 0:
             raise ValueError("k should be a int positive.")
 
     def generate(self) -> int:
         if self.seed is not None:
             random.seed(self.seed)
-        num = random.choices("1234567890", k=self.k)
+        num = random.choices("1234567890", k=self.length)
         # Asegurar que el primer dígito no sea cero
         while num[0] == '0':
-            num = random.choices("1234567890", k=self.k)
+            num = random.choices("1234567890", k=self.length)
         num = "".join(num)
         return int(num)
 
@@ -142,18 +147,22 @@ class GenerateKey:
 class StrToInt:
     message: Message
     letters: Letters
+    length: int
 
     def convert(self) -> Message:
         new_message = list()
-        for line in self.message:
-            ...
+        for line in self.message.message:
+            line_split = [line[self.length*i:(i+1)*self.length]
+                          for i in range(len(line)//self.length + 1)]
+            number_line_split = [self.str_to_int(text=text) for text in line_split]
 
     def str_to_int(self, text: str) -> int:
+        rang = self.letters.range()
         numbers = [self.letters.to_int[letter] if letter in self.letters.to_int.keys() else self.letters.to_int["¿"]
                    for letter in text]
         num = 0
         for i in range(len(numbers)):
-            num += numbers[i] * self.letters.range() ** int(i)
+            num += numbers[i] * rang ** int(i)
         return num
 
 
@@ -161,6 +170,11 @@ class StrToInt:
 class IntToStr:
     message: Message
     letters: Letters
+
+    def __post_init__(self):
+        for line in self.message.message:
+            if not line.is_digits():
+                raise ValueError("The line has that have only digits")
 
     def convert(self) -> Message: ...
 
@@ -180,7 +194,7 @@ class Decryp:
 
 
 if __name__ == "__main__":
-    GenerateNumber(k=-4)
+    GenerateNumber(length=-4)
 
     try:
         # generate_prime = GeneratePrime(GenerateNumber(15))
@@ -195,7 +209,7 @@ if __name__ == "__main__":
         text = ["Hola a todos", "ESTA ES OTRA LÍNEA"]
         message = Message(message=text)
         ff = IntToStr(message=message)
-        GenerateNumber(k=-4)
+        GenerateNumber(length=-4)
         input("END")
 
         ...
