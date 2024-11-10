@@ -1,8 +1,22 @@
 import random
 from dataclasses import dataclass
 from dotenv import load_dotenv
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 from math import sqrt, gcd
+
+
+@dataclass
+class Letters:
+    KEYS: str
+
+    def range(self):
+        return len(self.KEYS)
+
+    def to_int(self) -> dict:
+        return {self.KEYS[idx]: int(idx) for idx in range(self.range())}
+
+    def to_str(self) -> dict:
+        return {int(idx): self.KEYS[idx] for idx in range(self.range())}
 
 
 @dataclass
@@ -14,7 +28,7 @@ class Key:
 
 @dataclass
 class Message:
-    message: list[str]
+    message: List[str]
 
 
 @dataclass
@@ -117,9 +131,29 @@ class GenerateKey:
 
 @dataclass
 class StrToInt:
-    message = Message
+    message: Message
+    letters: Letters
 
-    def convert(self): ...
+    def convert(self) -> Message:
+        new_message = list()
+        for line in self.message:
+            ...
+
+    def str_to_int(self, text: str) -> int:
+        numbers = [self.letters.to_int[letter] if letter in self.letters.to_int.keys() else self.letters.to_int["¿"]
+                   for letter in text]
+        num = 0
+        for i in range(len(numbers)):
+            num += numbers[i] * self.letters.range() ** int(i)
+        return num
+
+
+@dataclass
+class IntToStr:
+    message: Message
+    letters: Letters
+
+    def convert(self) -> Message: ...
 
 
 @dataclass
@@ -137,16 +171,24 @@ class Decryp:
 
 
 if __name__ == "__main__":
-    try:
-        generate_prime = GeneratePrime(GenerateNumber(15))
-        generate_number = GenerateNumber(12)
-        generate_key = GenerateKey(
-            generate_prime=generate_prime, generate_number=generate_number)
-        key = generate_key.generate()
-        print(f"{key.k1=}")
-        print(f"{key.k2=}")
-        print(f"{key.k3=}")
-        input("Finished")
+    GenerateNumber(k=-4)
 
+    try:
+        # generate_prime = GeneratePrime(GenerateNumber(15))
+        # generate_number = GenerateNumber(12)
+        # generate_key = GenerateKey(
+        #     generate_prime=generate_prime, generate_number=generate_number)
+        # key = generate_key.generate()
+        # print(f"{key.k1=}")
+        # print(f"{key.k2=}")
+        # print(f"{key.k3=}")
+        # input("Finished")
+        text = ["Hola a todos", "ESTA ES OTRA LÍNEA"]
+        message = Message(message=text)
+        ff = IntToStr(message=message)
+        GenerateNumber(k=-4)
+        input("END")
+
+        ...
     except:
         input("ERROR")
