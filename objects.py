@@ -7,6 +7,15 @@ from math import sqrt, gcd
 
 @dataclass
 class Letters:
+    """Letters that be used for make messages
+    
+    Attributes:
+    KEYS: str -- letters without repetition 
+
+    Methods:
+    to_int() --
+    to_str() --
+    """
     KEYS: str
 
     def range(self):
