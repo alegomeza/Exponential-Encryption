@@ -6,6 +6,34 @@ from math import sqrt, gcd
 
 
 @dataclass
+class PowerMod:
+    exp: int
+    mod: int
+
+    def power(self, num: int) -> int:
+        bin_exp = bin(self.exp)
+        bin_exp = bin_exp[2:]
+        max_power = len(bin_exp)
+        
+        pow_tow = self.power_tower(num=num, max_power=max_power)
+        
+        result = 1
+        for idx in range(max_power):
+            if bin_exp[idx] == "1":
+                result *= pow_tow[idx]
+                result %= self.mod
+        
+        return result
+
+    def power_tower(self, num: int, max_power: int) -> List[int]:
+        pow_tow = [num % self.mod]
+        for _ in range(1, max_power):
+            power = pow_tow[0] ** 2 % self.mod
+            pow_tow.insert(0, power)
+        return pow_tow
+
+
+@dataclass
 class Letters:
     """
     Letters that be used for make messages
@@ -26,11 +54,13 @@ class Letters:
     def range(self):
         return len(self.KEYS)
 
-    def to_int(self) -> dict:
-        return {self.KEYS[idx]: int(idx) for idx in range(self.range())}
+    def to_int(self, value: str) -> int:
+        dict_prov = {self.KEYS[idx]: int(idx) for idx in range(self.range())}
+        return dict_prov[value]
 
-    def to_str(self) -> dict:
-        return {int(idx): self.KEYS[idx] for idx in range(self.range())}
+    def to_str(self, value: int) -> str:
+        dict_prov = {int(idx): self.KEYS[idx] for idx in range(self.range())}
+        return dict_prov[value]
 
 
 @dataclass
@@ -39,10 +69,24 @@ class Key:
     k2: int
     k3: int
 
+    def convert(self, num: int, mode:str = "encrypt"):
+        mod = self.k1
+        if mode == "encrypt":
+            exp = self.k2
+        elif mode == "decrypt":
+            exp = self.k3
+        else:
+            raise ValueError(f"{mode} is not a mode.\nmode: \"encrypt\" | \"decrypt\"" )
+        power_mod = PowerMod(exp=exp, mod=mod)
+        return power_mod.power(num=num)
+
 
 @dataclass
 class Message:
     message: List[str]
+
+    def __str__(self):
+        return "\n".join(self.message)
 
 
 @dataclass
@@ -88,6 +132,12 @@ class GeneratePrime:
 class GenerateKey:
     generate_prime: GeneratePrime
     generate_number: GenerateNumber
+
+    def generate(self) -> Key:
+        p = self.generate_prime.generate()
+        e = self.find_coprime(p - 1)
+        d = self.inverse_module(e, p - 1)
+        return Key(k1=p, k2=e, k3=d)
 
     def euclidean_alg(self, a: int, b: int) -> Tuple[int, int, int]:
         """gcd = Greatest Common Divisor
@@ -136,34 +186,39 @@ class GenerateKey:
             return 0
         return m % mod
 
-    def generate(self) -> Key:
-        p = self.generate_prime.generate()
-        e = self.find_coprime(p - 1)
-        d = self.inverse_module(e, p - 1)
-        return Key(k1=p, k2=e, k3=d)
-
 
 @dataclass
 class StrToInt:
-    message: Message
     letters: Letters
     length: int
 
-    def convert(self) -> Message:
+    def convert(self, message: Message) -> Message:
         new_message = list()
-        for line in self.message.message:
+        for line in message.message:
             line_split = [line[self.length*i:(i+1)*self.length]
                           for i in range(len(line)//self.length + 1)]
-            number_line_split = [self.str_to_int(text=text) for text in line_split]
+            number_line_split = [self.str_to_int(
+                text=text) for text in line_split]
+            number_str_line_split = [self.add_zeros(
+                num) for num in number_line_split]
+            number_str_line = "".join(number_str_line_split)
+            new_message.append(number_str_line)
+        return Message(message=new_message)
 
     def str_to_int(self, text: str) -> int:
         rang = self.letters.range()
-        numbers = [self.letters.to_int[letter] if letter in self.letters.to_int.keys() else self.letters.to_int["¿"]
+        numbers = [self.letters.to_int(letter) if letter in self.letters.KEYS else self.letters.to_int("?")
                    for letter in text]
         num = 0
         for i in range(len(numbers)):
             num += numbers[i] * rang ** int(i)
         return num
+
+    def add_zeros(self, num: int) -> str:
+        num_str = str(num)
+        while len(num_str) < 2*self.length:
+            num_str = "0" + num_str
+        return num_str
 
 
 @dataclass
@@ -182,8 +237,20 @@ class IntToStr:
 @dataclass
 class Encryp:
     key: Key
+    str_to_int: StrToInt
 
-    def encryp(self, message: Message) -> Message: ...
+    def encryp_message(self, message: Message) -> Message:
+        length = self.str_to_int.length
+        new_message = list()
+        code_message = self.str_to_int.convert(message=message)
+        for line in code_message.message:
+            line_split = []
+
+        print(code_message)
+
+    def encryp(self):
+        
+        ...
 
 
 @dataclass
@@ -197,21 +264,6 @@ if __name__ == "__main__":
     GenerateNumber(length=-4)
 
     try:
-        # generate_prime = GeneratePrime(GenerateNumber(15))
-        # generate_number = GenerateNumber(12)
-        # generate_key = GenerateKey(
-        #     generate_prime=generate_prime, generate_number=generate_number)
-        # key = generate_key.generate()
-        # print(f"{key.k1=}")
-        # print(f"{key.k2=}")
-        # print(f"{key.k3=}")
-        # input("Finished")
-        text = ["Hola a todos", "ESTA ES OTRA LÍNEA"]
-        message = Message(message=text)
-        ff = IntToStr(message=message)
-        GenerateNumber(length=-4)
-        input("END")
-
         ...
     except:
         input("ERROR")
