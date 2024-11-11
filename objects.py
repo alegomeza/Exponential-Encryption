@@ -79,6 +79,9 @@ class Key:
             raise ValueError(f"{mode} is not a mode.\nmode: \"encrypt\" | \"decrypt\"" )
         power_mod = PowerMod(exp=exp, mod=mod)
         return power_mod.power(num=num)
+    
+    def length(self) -> int:
+        return len(str(self.k1))
 
 
 @dataclass
@@ -98,7 +101,7 @@ class GenerateNumber:
         if not isinstance(self.length, int) or self.length <= 0:
             raise ValueError("k should be a int positive.")
 
-    def generate(self) -> int:
+    def generate_number(self) -> int:
         if self.seed is not None:
             random.seed(self.seed)
         num = random.choices("1234567890", k=self.length)
@@ -110,12 +113,11 @@ class GenerateNumber:
 
 
 @dataclass
-class GeneratePrime:
-    generate_number: GenerateNumber
+class GeneratePrime(GenerateNumber):
 
-    def generate(self) -> int:
+    def generate_prime(self) -> int:
         while True:
-            p = self.generate_number.generate()
+            p = self.generate_number()
             if self.is_prime(p):
                 return p
 
@@ -130,11 +132,13 @@ class GeneratePrime:
 
 @dataclass
 class GenerateKey:
-    generate_prime: GeneratePrime
-    generate_number: GenerateNumber
+    
+    length: int
+    # generate_prime: GeneratePrime
+    # generate_number: GenerateNumber
 
     def generate(self) -> Key:
-        p = self.generate_prime.generate()
+        p = self.generate_prime()
         e = self.find_coprime(p - 1)
         d = self.inverse_module(e, p - 1)
         return Key(k1=p, k2=e, k3=d)
@@ -170,7 +174,7 @@ class GenerateKey:
 
     def find_coprime(self, m: int) -> int:
         while True:
-            n = self.generate_number.generate()
+            n = self.generate_number()
             if self.is_coprime(n, m):
                 return n
 
@@ -185,6 +189,14 @@ class GenerateKey:
         if g != 1:
             return 0
         return m % mod
+    
+    def generate_prime(self):
+        gen_prime = GeneratePrime(length=self.length)
+        return gen_prime.generate_prime()
+    
+    def generate_number(self):
+        gen_number = GenerateNumber(length=self.length-1)
+        return gen_number.generate_number()
 
 
 @dataclass
@@ -248,7 +260,7 @@ class Encryp:
 
         print(code_message)
 
-    def encryp(self):
+    def convert_to_int(self):
         
         ...
 
