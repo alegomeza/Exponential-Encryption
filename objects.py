@@ -14,15 +14,15 @@ class PowerMod:
         bin_exp = bin(self.exp)
         bin_exp = bin_exp[2:]
         max_power = len(bin_exp)
-        
+
         pow_tow = self.power_tower(num=num, max_power=max_power)
-        
+
         result = 1
         for idx in range(max_power):
             if bin_exp[idx] == "1":
                 result *= pow_tow[idx]
                 result %= self.mod
-        
+
         return result
 
     def power_tower(self, num: int, max_power: int) -> List[int]:
@@ -51,15 +51,16 @@ class Letters:
         if len(self.KEYS) != len(set(self.KEYS)):
             raise ValueError("The are characters that repeat themselves")
 
+    @property
     def range(self):
         return len(self.KEYS)
 
     def to_int(self, value: str) -> int:
-        dict_prov = {self.KEYS[idx]: int(idx) for idx in range(self.range())}
+        dict_prov = {self.KEYS[idx]: int(idx) for idx in range(self.range)}
         return dict_prov[value]
 
     def to_str(self, value: int) -> str:
-        dict_prov = {int(idx): self.KEYS[idx] for idx in range(self.range())}
+        dict_prov = {int(idx): self.KEYS[idx] for idx in range(self.range)}
         return dict_prov[value]
 
 
@@ -69,19 +70,21 @@ class Key:
     k2: int
     k3: int
 
-    def convert(self, num: int, mode:str = "encrypt"):
+    @property
+    def length(self) -> int:
+        return len(str(self.k1))
+
+    def convert(self, num: int, mode: str = "encrypt"):
         mod = self.k1
         if mode == "encrypt":
             exp = self.k2
         elif mode == "decrypt":
             exp = self.k3
         else:
-            raise ValueError(f"{mode} is not a mode.\nmode: \"encrypt\" | \"decrypt\"" )
+            raise ValueError(
+                f"{mode} is not a mode.\nmode: \"encrypt\" | \"decrypt\"")
         power_mod = PowerMod(exp=exp, mod=mod)
         return power_mod.power(num=num)
-    
-    def length(self) -> int:
-        return len(str(self.k1))
 
 
 @dataclass
@@ -132,10 +135,8 @@ class GeneratePrime(GenerateNumber):
 
 @dataclass
 class GenerateKey:
-    
+
     length: int
-    # generate_prime: GeneratePrime
-    # generate_number: GenerateNumber
 
     def generate(self) -> Key:
         p = self.generate_prime()
@@ -189,11 +190,11 @@ class GenerateKey:
         if g != 1:
             return 0
         return m % mod
-    
+
     def generate_prime(self):
         gen_prime = GeneratePrime(length=self.length)
         return gen_prime.generate_prime()
-    
+
     def generate_number(self):
         gen_number = GenerateNumber(length=self.length-1)
         return gen_number.generate_number()
@@ -202,35 +203,15 @@ class GenerateKey:
 @dataclass
 class StrToInt:
     letters: Letters
-    length: int
 
-    def convert(self, message: Message) -> Message:
-        new_message = list()
-        for line in message.message:
-            line_split = [line[self.length*i:(i+1)*self.length]
-                          for i in range(len(line)//self.length + 1)]
-            number_line_split = [self.str_to_int(
-                text=text) for text in line_split]
-            number_str_line_split = [self.add_zeros(
-                num) for num in number_line_split]
-            number_str_line = "".join(number_str_line_split)
-            new_message.append(number_str_line)
-        return Message(message=new_message)
-
-    def str_to_int(self, text: str) -> int:
-        rang = self.letters.range()
+    def convert(self, text: str) -> int:
+        rang = self.letters.range
         numbers = [self.letters.to_int(letter) if letter in self.letters.KEYS else self.letters.to_int("?")
                    for letter in text]
         num = 0
         for i in range(len(numbers)):
             num += numbers[i] * rang ** int(i)
         return num
-
-    def add_zeros(self, num: int) -> str:
-        num_str = str(num)
-        while len(num_str) < 2*self.length:
-            num_str = "0" + num_str
-        return num_str
 
 
 @dataclass
@@ -247,22 +228,63 @@ class IntToStr:
 
 
 @dataclass
+class SplitJoinLine:
+    length: int
+
+    def join(self, line_split: List[str]) -> List[str]:
+        return "".join(line_split)
+        ...
+
+    def split(self, line: str) -> List[str]:
+        return [line[self.length*i:(i+1)*self.length]
+                for i in range((len(line) - 1)//self.length + 1)]
+
+    def add_zeros(self, num: int) -> str:
+        num_str = str(num)
+        while len(num_str) < 2*self.length:
+            num_str = "0" + num_str
+        return num_str
+
+
+@dataclass
 class Encryp:
     key: Key
     str_to_int: StrToInt
 
     def encryp_message(self, message: Message) -> Message:
-        length = self.str_to_int.length
-        new_message = list()
-        code_message = self.str_to_int.convert(message=message)
-        for line in code_message.message:
-            line_split = []
+        length = self.key.length // 2
+        split_join = SplitJoinLine(length)
+        for line in message.message:
+            line_split = split_join.split(line)
+            print(f"{line_split=}")
+            number_line_split = self._to_int(line_split)
+            print(f"{number_line_split=}")
+            cypher_number_line_split = self._to_cypher(number_line_split)
+            print(f"{cypher_number_line_split=}")
+            cypher_str_line_split = self._add_zeros(cypher_number_line_split)
+            print(f"{cypher_str_line_split=}")
+            cypher_str_line = split_join.join(cypher_str_line_split)
+            print(f"{cypher_str_line=}")
+            input("#"*10)
 
-        print(code_message)
+    def _to_int(self, line_split: List[str]) -> List[int]:
+        return [self.str_to_int.convert(text=text)
+                for text in line_split]
 
-    def convert_to_int(self):
+    def _to_cypher(self, number_line_split: List[int]) -> List[int]:
+        return [self.key.convert(num=number, mode="encrypt")
+                for number in number_line_split]
         
-        ...
+    def _add_zeros(self, cypher_number_line_split: List[int]) -> List[str]:
+        return [self._zeros(num) for num in cypher_number_line_split]
+        
+    def _zeros(self, num: int) -> str:
+        num_str = str(num)
+        while len(num_str) < self.key.length:
+            num_str = "0" + num_str
+        return num_str
+        
+        
 
 
 @dataclass
