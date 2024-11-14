@@ -261,61 +261,92 @@ class Encryp:
         split_join = SplitJoinLine(length)
         for line in message.message:
             print(f"{line=}")
+
             number_line = self._to_int(line)
             print(f"{number_line=}")
-            number_str_line = str(number_line)
+
+            number_str_line = self._number_to_string_length(number_line, self.key.length - 1)
             print(f"{number_str_line=}")
+
             number_str_line_split = split_join.split(number_str_line)
             print(f"{number_str_line_split=}")
-            number_line_split = [int(number) for number in number_str_line_split]
+
+            number_line_split = [int(number)
+                                 for number in number_str_line_split]
             print(f"{number_line_split=}")
+
             cypher_number_line_split = self._to_encrypt(number_line_split)
             print(f"{cypher_number_line_split=}")
-            cypher_number_str_line_split = self._add_zeros(cypher_number_line_split)
+
+            cypher_number_str_line_split = self._add_zeros(
+                cypher_number_line_split, 
+                self.key.length
+                )
             print(f"{cypher_number_str_line_split=}")
-            cypher_number_str_line = split_join.join(cypher_number_str_line_split)
+
+            cypher_number_str_line = split_join.join(
+                cypher_number_str_line_split)
             print(f"{cypher_number_str_line=}")
+
             cypher_number_line = int(cypher_number_str_line)
             print(f"{cypher_number_line=}")
+
             cypher_line = self._to_str(cypher_number_line)
             print(f"{cypher_line=}")
+
             cypher_message.append(cypher_line)
             print(f"{cypher_message=}")
+
         return Message(cypher_message)
-    
+
     def decryp_message(self, cypher_message: Message) -> Message:
         message = list()
         length = self.key.length
-        split_join = SplitJoinLine(length)        
+        split_join = SplitJoinLine(length)
         for cypher_line in cypher_message.message:
             print(f"{cypher_line=}")
+
             cypher_number_line = self._to_int(cypher_line)
             print(f"{cypher_number_line=}")
-            cypher_number_str_line = str(cypher_number_line)
+
+            cypher_number_str_line = self._number_to_string_length(
+                cypher_number_line, 
+                self.key.length
+                )
             print(f"{cypher_number_str_line=}")
-            cypher_number_str_line_split = split_join.split(cypher_number_str_line)
+
+            cypher_number_str_line_split = split_join.split(
+                cypher_number_str_line)
             print(f"{cypher_number_str_line_split=}")
-            cypher_number_line_split = self._list_str_to_int(cypher_number_str_line_split)
+
+            cypher_number_line_split = self._list_str_to_int(
+                cypher_number_str_line_split)
             print(f"{cypher_number_line_split=}")
+
             number_line_split = self._to_decrypt(cypher_number_line_split)
             print(f"{number_line_split=}")
-            number_str_line_split = self._add_zeros(number_line_split)
+
+            number_str_line_split = self._add_zeros(number_line_split, self.key.length - 1)
             print(f"{number_str_line_split=}")
+
             # number_str_line_split = self._list_int_to_str(number_line_split)
             number_str_line = split_join.join(number_str_line_split)
             print(f"{number_str_line=}")
+
             number_line = int(number_str_line)
             print(f"{number_line=}")
+
             line = self._to_str(number_line)
             print(f"{line=}")
+
             message.append(line)
             print(f"{message=}")
-        return Message(message)
 
+        return Message(message)
 
     def _to_int(self, line: str) -> int:
         return self.str_to_int.convert(line)
-    
+
     def _to_str(self, line: int) -> str:
         return self.int_to_str.convert(line)
 
@@ -326,22 +357,27 @@ class Encryp:
     def _to_decrypt(self, number_line_split: List[int]) -> List[int]:
         return [self.key.convert(num=number, mode="decrypt")
                 for number in number_line_split]
-        
-    def _add_zeros(self, number_line_split: List[int]) -> List[str]:
-        return [self._zeros(num) for num in number_line_split]
-        
-    def _zeros(self, num: int) -> str:
+
+    def _add_zeros(self, number_line_split: List[int], length: int) -> List[str]:
+        return [self._zeros(num, length) for num in number_line_split]
+
+    def _zeros(self, num: int, length: int) -> str:
         num_str = str(num)
-        while len(num_str) < self.key.length:
+        while len(num_str) < length:
             num_str = "0" + num_str
         return num_str
-    
+
     def _list_str_to_int(self, number_str_line_split: List[str]) -> List[int]:
         return [int(number) for number in number_str_line_split]
-    
+
     def _list_int_to_str(self, number_line_split: List[str]) -> List[str]:
-        return [str(number) for number in number_line_split]        
-        
+        return [str(number) for number in number_line_split]
+
+    def _number_to_string_length(self, number_line: int, length: int) -> str:
+        number_line_str = str(number_line)
+        while len(number_line_str) % length != 0:
+            number_line_str = "0" + number_line_str
+        return number_line_str
 
 
 @dataclass
@@ -358,10 +394,10 @@ if __name__ == "__main__":
         ...
     except:
         input("ERROR")
-        
+
 # Sebastián Alejandro Gómez Ardila
 
-#  #################### 
+#  ####################
 
 # Key(k1=1409, k2=769, k3=769)
 
