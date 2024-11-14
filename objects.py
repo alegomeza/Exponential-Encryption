@@ -199,6 +199,22 @@ class GenerateKey:
         gen_number = GenerateNumber(length=self.length-1)
         return gen_number.generate_number()
 
+@dataclass
+class GenerateKeyWithPrime(GenerateKey):
+    prime: int
+
+    def generate(self) -> Key:
+        p = self.prime
+        e = self.find_coprime(p - 1)
+        d = self.inverse_module(e, p - 1)
+        return Key(k1=p, k2=e, k3=d)
+    
+    # @property
+    # def length(self):
+    #     return len(str(self.prime))
+    
+    
+    ...
 
 @dataclass
 class StrToInt:
